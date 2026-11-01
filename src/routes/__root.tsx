@@ -78,11 +78,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Your logo — Winter capsule" },
-      { name: "description", content: "Cold days. Warm layers. An interactive winter clothing concept crafted by AUREN." },
+      { title: "NIVELLE — The Winter Atelier" },
+      {
+        name: "description",
+        content: "Nivelle. A considered winter wardrobe and digital atelier, crafted by AUREN.",
+      },
       { name: "author", content: "AUREN" },
-      { property: "og:title", content: "Your logo — Winter capsule" },
-      { property: "og:description", content: "Cold days. Warm layers. An interactive winter clothing concept crafted by AUREN." },
+      { property: "og:title", content: "NIVELLE — The Winter Atelier" },
+      {
+        property: "og:description",
+        content: "Nivelle. A considered winter wardrobe and digital atelier, crafted by AUREN.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],

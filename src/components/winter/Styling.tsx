@@ -1,48 +1,69 @@
 import { useState } from "react";
+import { ArrowUpRight } from "lucide-react";
 import { looks } from "@/lib/catalog";
 import { useReveal } from "./useWinter";
-import { cn } from "@/lib/utils";
 
 export function Styling() {
-  const [i, setI] = useState(0);
+  const [selected, setSelected] = useState(0);
+  const [pending, setPending] = useState<number | null>(null);
+  const [loaded, setLoaded] = useState<number[]>([]);
   const ref = useReveal<HTMLDivElement>();
-  const look = looks[i] ?? looks[0];
+  const look = looks[selected] ?? looks[0];
+  const choose = (i: number) => {
+    if (loaded.includes(i)) setSelected(i);
+    else setPending(i);
+  };
   return (
-    <section id="look" className="grain relative bg-cocoa px-5 py-24 text-ivory md:px-8 md:py-32" aria-labelledby="look-title">
-      <div ref={ref} className="reveal mx-auto grid max-w-7xl items-center gap-10 md:grid-cols-[1.05fr_1fr] md:gap-16">
-        <div className="relative mx-auto aspect-[4/5.5] w-full max-w-lg overflow-hidden rounded-[2rem] bg-night shadow-soft">
-          {looks.map((l, k) => (
-            <img key={l.id} src={l.image} alt={`The same model dressed for ${l.name}`} width={1000} height={1375}
-              loading={k === 0 ? "lazy" : "eager"} decoding="async"
-              className={cn("outfit-img absolute inset-0 h-full w-full object-cover object-top", k === i ? "opacity-100 scale-100" : "opacity-0 scale-[1.03]")} />
+    <section id="look" className="n-look n-section" aria-labelledby="look-title">
+      <div ref={ref} className="n-look-grid n-reveal">
+        <div className="n-look-visual">
+          {looks.map((l, i) => (
+            <img
+              key={l.id}
+              src={l.image}
+              alt={`Nivelle ${l.name} winter outfit`}
+              width={1000}
+              height={1375}
+              loading="eager"
+              className={selected === i ? "is-active" : ""}
+              onLoad={() => {
+                setLoaded((old) => (old.includes(i) ? old : [...old, i]));
+                if (pending === i) {
+                  setSelected(i);
+                  setPending(null);
+                }
+              }}
+            />
           ))}
-          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-night/80 to-transparent p-6 pt-20">
-            <p className="font-display text-3xl italic" aria-live="polite">{look.name}</p>
-          </div>
+          <span className="n-look-photo-label">NIVELLE / WINTER STORIES / 0{selected + 1}</span>
         </div>
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.35em] text-amber">Lookbook</p>
-          <h2 id="look-title" className="mt-3 text-5xl md:text-7xl">Find your winter look</h2>
-          <div role="group" aria-label="Outfits" className="mt-10 flex flex-col gap-3">
-            {looks.map((l, k) => (
-              <button key={l.id} aria-pressed={k === i} onClick={() => setI(k)}
-                className={cn("flex min-h-14 items-center justify-between rounded-2xl border px-5 py-4 text-left transition-all duration-500",
-                  k === i ? "border-amber bg-ivory text-cocoa shadow-[var(--shadow-glow)]" : "border-ivory/20 hover:border-ivory/50 hover:bg-ivory/5")}>
+        <div className="n-look-copy">
+          <p className="n-eyebrow">02 — WAYS TO WEAR WINTER</p>
+          <h2 id="look-title">
+            One season.
+            <br />
+            <em>Many moods.</em>
+          </h2>
+          <p className="n-look-description">
+            From the first light to the last embers.
+            <br />
+            Find the layers that feel like you.
+          </p>
+          <div className="n-look-options" role="group" aria-label="Choose a winter outfit">
+            {looks.map((l, i) => (
+              <button key={l.id} aria-pressed={selected === i} onClick={() => choose(i)}>
+                <span className="n-look-number">0{i + 1}</span>
                 <span>
-                  <span className="block font-display text-2xl">{l.name}</span>
-                  <span className={cn("block text-sm", k === i ? "text-cocoa/70" : "text-ivory/60")}>{l.note}</span>
+                  <strong>{l.name}</strong>
+                  <small>{pending === i ? "Preparing your look…" : l.note}</small>
                 </span>
-                <span className="text-sm font-semibold">0{k + 1}</span>
+                <ArrowUpRight size={20} />
               </button>
             ))}
           </div>
-          <div className="mt-8 rounded-2xl frost-dark p-5">
-            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-amber">In this look</p>
-            <ul key={look.id} className="mt-3 grid gap-2 sm:grid-cols-2">
-              {look.pieces.map((pc, k) => (
-                <li key={pc} className="animate-in fade-in slide-in-from-bottom-2 text-sm text-ivory/90" style={{ animationDelay: `${k * 70}ms`, animationFillMode: "both" }}>✦ {pc}</li>
-              ))}
-            </ul>
+          <div className="n-look-pieces" aria-live="polite">
+            <span className="n-eyebrow">IN THIS LOOK</span>
+            <p>{look.pieces.join(" / ")}</p>
           </div>
         </div>
       </div>
