@@ -1,6 +1,6 @@
 import hero from "@/assets/hero-model.jpg";
 import { ArrowDown, ArrowUpRight } from "lucide-react";
-import { AnimatedText, AtelierSeal, WinterBloom } from "./BrandDetails";
+import { AnimatedText } from "./BrandDetails";
 import { useWinter } from "./useWinter";
 
 export function Hero() {
@@ -12,9 +12,8 @@ export function Hero() {
       aria-labelledby="hero-title"
     >
       <div className="n-hero-copy">
-        <WinterBloom className="n-hero-embroidery" />
         <p className="n-eyebrow">
-          <span className="n-season-dot" />
+          <span className="n-line" />
           THE WINTER EDIT · VOL. 01
         </p>
         <h1 id="hero-title" tabIndex={-1}>
@@ -57,7 +56,6 @@ export function Hero() {
           <em>A feeling.</em>
         </div>
       </div>
-      <AtelierSeal />
       <div className="n-vertical-note" aria-hidden="true">
         NIVELLE — WINTER ATELIER
       </div>

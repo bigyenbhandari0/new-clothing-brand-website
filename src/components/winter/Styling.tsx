@@ -1,4 +1,4 @@
-import { AnimatedText, WinterBloom } from "./BrandDetails";
+import { AnimatedText } from "./BrandDetails";
 import { useEffect, useRef, useState } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { looks } from "@/lib/catalog";
@@ -60,7 +60,6 @@ export function Styling() {
   };
   return (
     <section id="look" className="n-look n-section" aria-labelledby="look-title">
-      <WinterBloom className="n-look-bloom" />
       <div ref={ref} className="n-look-grid n-reveal">
         <div className="n-look-visual">
           {looks.map((l, i) => (

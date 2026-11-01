@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import { ArrowUpRight, ChevronDown, X } from "lucide-react";
 import knit from "@/assets/p-knit-oatmeal.jpg";
 import { Logo } from "./Logo";
-import { WinterBloom } from "./BrandDetails";
 import { useWinter, type Category } from "./useWinter";
 
 const NAV = [
@@ -28,11 +27,6 @@ export function Header() {
       raf = requestAnimationFrame(() => {
         raf = 0;
         setScrolled(window.scrollY > 35);
-        const height = document.documentElement.scrollHeight - window.innerHeight;
-        root.current?.style.setProperty(
-          "--nav-progress",
-          String(height > 0 ? Math.min(1, window.scrollY / height) : 0),
-        );
       });
     };
     on();
@@ -105,7 +99,6 @@ export function Header() {
         <a href="#top" aria-label="Nivelle home" className="n-brand" onClick={() => go("top")}>
           <Logo />
         </a>
-        <div className="n-nav-divider" aria-hidden="true" />
         <nav className="n-desktop-nav" aria-label="Main navigation">
           <button
             ref={collectionButton}
@@ -164,7 +157,6 @@ export function Header() {
             </span>
           )}
         </button>
-        <div className="n-nav-progress" aria-hidden="true" />
       </div>
       {collectionOpen && (
         <div id="collection-menu" className="n-mega-menu">
@@ -198,7 +190,7 @@ export function Header() {
         <nav id="mobile-navigation" className="n-mobile-nav" aria-label="Mobile navigation">
           <div className="n-mobile-nav-intro">
             <span className="n-eyebrow">A SLOWER KIND OF WINTER</span>
-            <WinterBloom />
+            <span className="n-mobile-nav-season">01 / WINTER</span>
           </div>
           {NAV.map((n, i) => (
             <a
