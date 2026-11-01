@@ -1,4 +1,5 @@
 import { useEffect, useId, useRef, useState } from "react";
+import type { Material } from "three";
 
 /** Same solid silhouette for the WebGL sculpture and the extruded CSS fallback. */
 function SculptedFace({ edge = false }: { edge?: boolean }) {
@@ -61,8 +62,8 @@ export function SpinningMark({ reduced }: { reduced: boolean }) {
           el.appendChild(canvas);
           const scene = new T.Scene();
           const camera = new T.PerspectiveCamera(32, el.clientWidth / el.clientHeight, 0.1, 30);
-          camera.position.set(0, 0.1, 6.6);
-          camera.lookAt(0, 0, 0);
+          camera.position.set(0, 0.6, 9.6);
+          camera.lookAt(0, -0.8, 0);
           // Self-contained studio light boxes give metal broad, moving reflections.
           const envCanvas = document.createElement("canvas");
           envCanvas.width = 1024;
@@ -156,6 +157,45 @@ export function SpinningMark({ reduced }: { reduced: boolean }) {
           const serif2 = serif1.clone();
           serif2.position.set(0.43, -0.88, 0);
           group.add(serif2);
+          // A mirrored copy of the same meshes shares the exact animation matrix.
+          const floorY = -1.52;
+          const reflection = group.clone(true);
+          reflection.matrixAutoUpdate = false;
+          const reflectedMaterials = new Map<Material, Material>();
+          const soften = (source: Material) => {
+            const previous = reflectedMaterials.get(source);
+            if (previous) return previous;
+            const material = source.clone();
+            material.transparent = true;
+            material.opacity = 0.26;
+            material.depthWrite = false;
+            if (material instanceof T.MeshStandardMaterial)
+              material.roughness = Math.max(0.42, material.roughness);
+            material.onBeforeCompile = (shader) => {
+              shader.vertexShader = "varying vec3 vReflectionWorld;\n" + shader.vertexShader;
+              shader.vertexShader = shader.vertexShader.replace(
+                "#include <begin_vertex>",
+                "#include <begin_vertex>\nvReflectionWorld = (modelMatrix * vec4(position,1.0)).xyz;",
+              );
+              shader.fragmentShader = "varying vec3 vReflectionWorld;\n" + shader.fragmentShader;
+              shader.fragmentShader = shader.fragmentShader.replace(
+                "#include <opaque_fragment>",
+                "diffuseColor.a *= (1.0 - smoothstep(0.0, 2.35, max(0.0, -1.52 - vReflectionWorld.y)));\n#include <opaque_fragment>",
+              );
+            };
+            material.customProgramCacheKey = () => "nivelle-floor-reflection-v1";
+            reflectedMaterials.set(source, material);
+            return material;
+          };
+          reflection.traverse((object) => {
+            if (object instanceof T.Mesh)
+              object.material = Array.isArray(object.material)
+                ? object.material.map(soften)
+                : soften(object.material);
+          });
+          scene.add(reflection);
+          const mirror = new T.Matrix4().makeScale(1, -1, 1);
+          mirror.setPosition(0, 2 * floorY, 0);
           let raf = 0,
             last = performance.now(),
             angle = -0.5,
@@ -171,6 +211,9 @@ export function SpinningMark({ reduced }: { reduced: boolean }) {
             group.rotation.y = motion.current ? -0.5 : angle + px * 0.13;
             group.rotation.x = motion.current ? 0.08 : 0.1 + py * 0.12;
             group.position.y = motion.current ? 0 : Math.sin(t / 2100) * 0.045;
+            group.updateMatrix();
+            reflection.matrix.copy(mirror).multiply(group.matrix);
+            reflection.matrixWorldNeedsUpdate = true;
             if (!motion.current || !readyFrame) {
               renderer.render(scene, camera);
               readyFrame = true;
@@ -205,6 +248,7 @@ export function SpinningMark({ reduced }: { reduced: boolean }) {
             nGeo.dispose();
             ringGeo.dispose();
             serifGeo.dispose();
+            reflectedMaterials.forEach((material) => material.dispose());
             face.dispose();
             side.dispose();
             environment.dispose();
@@ -250,6 +294,21 @@ export function SpinningMark({ reduced }: { reduced: boolean }) {
                 <SculptedFace edge={i !== 0 && i !== 18} />
               </div>
             ))}
+          </div>
+          <div className="n-css-floor-reflection" aria-hidden="true">
+            <div className="n-reflection-flip">
+              <div className="n-logo-volume">
+                {Array.from({ length: 19 }, (_, i) => (
+                  <div
+                    className={`n-logo-slice ${i === 0 || i === 18 ? "n-logo-face" : "n-logo-edge"}`}
+                    key={i}
+                    style={{ transform: `translateZ(${i - 9}px)` }}
+                  >
+                    <SculptedFace edge={i !== 0 && i !== 18} />
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       )}

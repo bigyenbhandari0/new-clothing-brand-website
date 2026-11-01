@@ -73,8 +73,8 @@ export function Intro() {
     >
       <div className="n-intro-environment" aria-hidden="true">
         <picture>
-          <source media="(max-width: 700px)" srcSet="/media/intro-alpine-night-mobile.webp" />
-          <img src="/media/intro-alpine-night.webp" alt="" fetchPriority="high" />
+          <source media="(max-width: 700px)" srcSet="/media/intro-courtyard-floor-mobile.webp" />
+          <img src="/media/intro-courtyard-floor.webp" alt="" fetchPriority="high" />
         </picture>
         <div className="n-intro-environment-shade" />
       </div>
@@ -88,9 +88,11 @@ export function Intro() {
       </div>
       <div className="n-intro-center">
         <span className="n-intro-prelude">THE WINTER ATELIER</span>
-        <SpinningMark reduced={reduced} />
         <div className="n-intro-wordmark">NIVELLE</div>
         <p className="n-intro-tagline">A quieter kind of winter.</p>
+        <div className="n-floor-stage">
+          <SpinningMark reduced={reduced} />
+        </div>
         <button className="n-enter" onClick={enter} disabled={state !== "idle"}>
           Enter the atelier <ArrowUpRight size={16} />
         </button>

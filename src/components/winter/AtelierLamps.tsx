@@ -17,7 +17,7 @@ export function AtelierLamps() {
       canvas.height = Math.round(h * scale);
       const logo = canvas.parentElement?.querySelector(".n-spinning-mark")?.getBoundingClientRect();
       const targetX = logo ? logo.left + logo.width * 0.5 - rect.left : w * 0.5;
-      const targetY = logo ? logo.top + logo.height * 0.5 - rect.top : h * 0.36;
+      const targetY = logo ? logo.top + logo.height * 0.34 - rect.top : h * 0.36;
       const lampY = Math.max(32, Math.min(h * 0.14, targetY - 140));
       const separation = w < 700 ? 48 : 68;
       const pixels = ctx.createImageData(canvas.width, canvas.height);

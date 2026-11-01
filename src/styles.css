@@ -3688,3 +3688,137 @@ section[id] {
 .n-intro .n-studio-lights {
   pointer-events: none;
 }
+/* A single sculpture stage ties the hovering bronze and reflection to the courtyard floor. */
+.n-intro-center {
+  top: 0;
+  bottom: 0;
+  height: 100%;
+  width: min(620px, 100%);
+  transform: translateX(-50%);
+}
+.n-intro-center > .n-intro-prelude {
+  position: absolute;
+  top: 18%;
+  left: 0;
+  right: 0;
+  margin: 0;
+  font-size: 9px;
+}
+.n-intro-center > .n-intro-wordmark {
+  position: absolute;
+  top: 22%;
+  left: 0;
+  right: 0;
+  font-size: clamp(38px, 4vw, 56px);
+}
+.n-intro-center > .n-intro-tagline {
+  position: absolute;
+  top: 30%;
+  left: 0;
+  right: 0;
+  margin: 0;
+}
+.n-floor-stage {
+  position: absolute;
+  top: 36%;
+  left: 50%;
+  width: 300px;
+  height: 42%;
+  transform: translateX(-50%);
+  pointer-events: auto;
+}
+.n-floor-stage .n-spinning-mark.n-sculpture {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+.n-floor-stage .n-mark-canvas {
+  position: absolute;
+  inset: 0;
+}
+.n-intro-center > .n-enter {
+  position: absolute;
+  top: 81%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+}
+.n-intro-center > .n-intro-season {
+  position: absolute;
+  top: 90%;
+  left: 0;
+  right: 0;
+  margin: 0;
+  justify-content: center;
+}
+.n-intro-environment img {
+  filter: brightness(0.64) saturate(0.75);
+}
+.n-floor-stage .n-solid-logo {
+  inset: 2% 23% 43%;
+}
+@media (max-width: 700px) {
+  .n-intro-center > .n-intro-prelude {
+    top: 16%;
+    font-size: 8px;
+  }
+  .n-intro-center > .n-intro-wordmark {
+    top: 21%;
+    font-size: 38px;
+  }
+  .n-intro-center > .n-intro-tagline {
+    top: 29%;
+    font-size: 18px;
+  }
+  .n-floor-stage {
+    top: 34%;
+    width: 260px;
+    height: 44%;
+  }
+  .n-intro-center > .n-enter {
+    top: 80%;
+  }
+  .n-intro-center > .n-intro-season {
+    top: 89%;
+  }
+}
+@media (max-height: 550px) and (orientation: landscape) {
+  .n-intro-center > .n-intro-prelude {
+    top: 12%;
+  }
+  .n-intro-center > .n-intro-wordmark {
+    top: 18%;
+    font-size: 30px;
+  }
+  .n-intro-center > .n-intro-tagline {
+    top: 30%;
+    font-size: 15px;
+  }
+  .n-floor-stage {
+    top: 36%;
+    width: 210px;
+    height: 39%;
+  }
+  .n-intro-center > .n-enter {
+    top: 76%;
+    min-height: 40px;
+  }
+  .n-intro-center > .n-intro-season {
+    display: none;
+  }
+}
+.n-css-floor-reflection {
+  position: absolute;
+  top: 109%;
+  left: 0;
+  width: 100%;
+  height: 90%;
+  opacity: 0.18;
+  pointer-events: none;
+  mask-image: linear-gradient(to bottom, #000, transparent 85%);
+}
+.n-reflection-flip {
+  width: 100%;
+  height: 100%;
+  transform: scaleY(-1);
+}
