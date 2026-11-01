@@ -40,7 +40,7 @@ function WinterExperience() {
   return (
     <>
       <Intro key={introKey} />
-      <div inert={!entered} aria-hidden={!entered ? true : undefined}>
+      <div className="n-winter-world" inert={!entered} aria-hidden={!entered ? true : undefined}>
         <a href="#main" className="skip-content">
           Skip to collection experience
         </a>

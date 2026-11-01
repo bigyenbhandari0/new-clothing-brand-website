@@ -3822,3 +3822,215 @@ section[id] {
   height: 100%;
   transform: scaleY(-1);
 }
+/* One alpine-night world from the entrance through the collection. */
+.n-intro-environment img {
+  filter: brightness(0.36) saturate(0.65);
+}
+.n-winter-world {
+  --n-ink: #eee6d8;
+  --n-muted: #b8b0a1;
+  --n-border: #d4c4a529;
+  --n-paper: #14201b;
+  background: #0a110e;
+  color: #eee6d8;
+}
+.n-campaign-courtyard {
+  position: absolute;
+  inset: 0;
+  display: block;
+  background: #050b08;
+}
+.n-campaign-courtyard img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  filter: brightness(0.36) saturate(0.65);
+}
+.n-winter-world .n-campaign {
+  background: #090f0c;
+}
+.n-winter-world .n-campaign-images {
+  background: #090f0c;
+}
+.n-winter-world .n-campaign-slide {
+  left: 54%;
+  right: 5vw;
+  top: calc(96px + 5vh);
+  bottom: 145px;
+  border: 1px solid #d7c29c38;
+  border-radius: 3px;
+  box-shadow: 0 22px 70px #0006;
+  opacity: 0;
+}
+.n-winter-world .n-campaign.n-arrived .n-campaign-slide.is-active {
+  opacity: 1;
+  transition:
+    opacity 1.5s ease 0.75s,
+    transform 0.5s ease-out;
+}
+.n-winter-world .n-campaign-slide img {
+  filter: brightness(0.68) saturate(0.6);
+}
+.n-winter-world .n-campaign-slide::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(0deg, #08100b66, transparent 50%);
+}
+.n-winter-world .n-campaign .n-film-shade {
+  background:
+    linear-gradient(0deg, #0a110e 0%, transparent 30%),
+    linear-gradient(90deg, #06100b66, transparent 65%);
+}
+.n-winter-world .n-campaign .n-hero-copy {
+  width: 53%;
+  padding-left: 7vw;
+  padding-right: 3vw;
+}
+.n-winter-world .n-campaign h1 {
+  font-size: clamp(64px, 6vw, 104px);
+}
+.n-winter-world .n-campaign.n-arrived .n-hero-copy {
+  animation: n-atelier-arrive 1.3s 0.25s both;
+}
+.n-winter-world .n-header-glass {
+  border-bottom-color: #d7c29c1f;
+}
+.n-winter-world .n-header-glass .n-nav-shell {
+  animation: n-atelier-arrive 1s 0.15s both;
+}
+.n-winter-world .n-collection {
+  background: #0a110e;
+  border-top: 1px solid #d4c4a51a;
+}
+.n-winter-world .n-look {
+  background: #101a15;
+  color: #eee6d8;
+}
+.n-winter-world .n-material {
+  background: #14201b;
+  color: #eee6d8;
+}
+.n-winter-world .n-editorial {
+  background: #0c1511;
+}
+.n-winter-world .n-footer {
+  background: #080e0b;
+  color: #eee6d8;
+}
+.n-winter-world .n-section-heading h2,
+.n-winter-world .n-product-info h3,
+.n-winter-world .n-material h2,
+.n-winter-world .n-editorial h2 {
+  color: #eee6d8;
+}
+.n-winter-world .n-section-heading h2 em,
+.n-winter-world .n-material h2 em,
+.n-winter-world .n-editorial h2 em {
+  color: #c9b28f;
+}
+.n-winter-world .n-section-heading > p,
+.n-winter-world .n-product-info p,
+.n-winter-world .n-product-colors > span {
+  color: #b8b0a1;
+}
+.n-winter-world .n-fabric-panel {
+  background: #1a2820;
+  border-color: #d4c4a529;
+}
+.n-winter-world .n-fabric-stage {
+  background: radial-gradient(ellipse at 50% 45%, #334537, #17251c 75%);
+}
+.n-winter-world .n-fabric-top,
+.n-winter-world .n-fabric-bottom {
+  color: #b8b0a1;
+  border-color: #d4c4a529;
+}
+.n-winter-world .n-product-visual {
+  border: 1px solid #d4c4a529;
+}
+@keyframes n-atelier-arrive {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (max-width: 900px) and (min-width: 701px) {
+  .n-winter-world .n-campaign h1 {
+    font-size: clamp(52px, 7vw, 76px);
+  }
+  .n-winter-world .n-campaign-slide {
+    left: 53%;
+    right: 3vw;
+  }
+}
+@media (max-width: 700px) {
+  .n-winter-world .n-campaign-slide {
+    left: 34%;
+    right: 6vw;
+    top: 100px;
+    bottom: auto;
+    height: 28svh;
+    max-height: 320px;
+  }
+  .n-winter-world .n-campaign-slide img {
+    object-position: 76% top;
+  }
+  .n-winter-world .n-campaign .n-hero-copy {
+    width: 100%;
+    padding: calc(28svh + 112px) 24px 190px;
+  }
+  .n-winter-world .n-campaign h1 {
+    font-size: clamp(50px, 12vw, 76px);
+  }
+  .n-winter-world .n-campaign .n-film-shade {
+    background: linear-gradient(0deg, #0a110e 0%, #0a110e55 40%, transparent 75%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .n-winter-world .n-campaign.n-arrived .n-hero-copy,
+  .n-winter-world .n-header-glass .n-nav-shell {
+    animation: none;
+  }
+  .n-winter-world .n-campaign.n-arrived .n-campaign-slide.is-active {
+    transition: none;
+  }
+}
+
+.n-campaign-courtyard {
+  height: 100svh;
+  bottom: auto;
+}
+.n-winter-world .n-product-open {
+  color: #302a25;
+}
+.n-winter-world .n-product-hover-label {
+  color: #f4ecdf;
+  background: #0a110ecc;
+  padding: 7px 10px;
+  border-radius: 2px;
+}
+.n-winter-world .n-header-glass .n-mobile-nav {
+  background: #101a15;
+  color: #eee6d8;
+}
+.n-winter-world .skip-content {
+  background: #101a15;
+  color: #eee6d8;
+}
+
+body:has(.n-winter-world) {
+  background: #0a110e;
+}
+.n-winter-world .n-mega-menu {
+  --n-ink: #302a25;
+  --n-muted: #7a7268;
+  --n-border: #d9d0c4;
+  --n-paper: #eee8df;
+}

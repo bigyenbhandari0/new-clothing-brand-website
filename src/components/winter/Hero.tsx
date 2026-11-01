@@ -73,8 +73,8 @@ export function Hero() {
       time += dt;
       const c = camera.current;
       const tx =
-        (wind.current.x - 0.5) * Math.min(28, el.clientWidth * 0.03) +
-        Math.sin(time * 0.35) * Math.min(13, el.clientWidth * 0.015);
+        (wind.current.x - 0.5) * Math.min(28, el.clientWidth * 0.015) +
+        Math.sin(time * 0.35) * Math.min(13, el.clientWidth * 0.007);
       const ty = (wind.current.y - 0.5) * 14 + Math.cos(time * 0.28) * 6;
       c.vx += ((tx - c.x) * 32 - c.vx * 10) * dt;
       c.vy += ((ty - c.y) * 32 - c.vy * 10) * dt;
@@ -113,6 +113,10 @@ export function Hero() {
       }}
     >
       <div className="n-campaign-images" aria-hidden="true">
+        <picture className="n-campaign-courtyard">
+          <source media="(max-width:700px)" srcSet="/media/intro-courtyard-floor-mobile.webp" />
+          <img src="/media/intro-courtyard-floor.webp" alt="" fetchPriority="high" />
+        </picture>
         {slides.map((slide, i) => (
           <div key={slide.image} className={`n-campaign-slide ${active === i ? "is-active" : ""}`}>
             <img
@@ -127,7 +131,7 @@ export function Hero() {
             />
           </div>
         ))}
-        <WinterWeather running={moving} wind={wind} />
+        <WinterWeather studio running={moving} wind={wind} />
         <div className="n-film-shade" />
       </div>
       <div
@@ -211,7 +215,7 @@ export function Hero() {
       <div className="n-hero-copy">
         <p className="n-eyebrow">
           <span className="n-line" />
-          THE WINTER CAMPAIGN · VOLUME 01
+          THE WINTER ATELIER · VOLUME 01
         </p>
         <h1 id="hero-title" tabIndex={-1}>
           <AnimatedText text="The art of" />
@@ -221,8 +225,9 @@ export function Hero() {
           </em>
         </h1>
         <p className="n-hero-description">
-          Quiet layers. Considered textures.
-          <br />A season, felt a little differently.
+          From the courtyard, into the collection.
+          <br />
+          Quiet layers for the colder hours.
         </p>
         <a href="#collection" className="n-link-button">
           Explore the collection <ArrowUpRight size={18} />
