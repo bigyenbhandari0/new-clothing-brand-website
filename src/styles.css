@@ -4034,3 +4034,184 @@ body:has(.n-winter-world) {
   --n-border: #d9d0c4;
   --n-paper: #eee8df;
 }
+/* A quiet editorial grid; controls belong to the image rather than the room. */
+.n-intro-environment img {
+  filter: brightness(0.18) saturate(0.55);
+}
+.n-winter-world .n-campaign-courtyard img {
+  filter: brightness(0.2) saturate(0.55);
+}
+.n-winter-world .n-campaign .n-hero-copy {
+  width: 51%;
+  padding-left: 7vw;
+  padding-right: 4vw;
+}
+.n-winter-world .n-campaign h1 {
+  font-size: clamp(64px, 5.35vw, 94px);
+  line-height: 1.02;
+}
+.n-winter-world .n-campaign .n-hero-description {
+  max-width: 310px;
+  color: #c2b9a7;
+  line-height: 1.9;
+}
+.n-winter-world .n-campaign-slide {
+  left: 56%;
+  right: 7vw;
+  top: calc(96px + 6vh);
+  bottom: 155px;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+.n-winter-world .n-campaign .n-film-footer {
+  left: 7vw;
+  right: 7vw;
+  bottom: 88px;
+  align-items: center;
+}
+.n-winter-world .n-campaign-controls {
+  width: 37vw;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 44px;
+  border-top: 1px solid #d7c29c33;
+  padding-top: 14px;
+}
+.n-winter-world .n-scene-toggle {
+  order: 3;
+  min-width: 36px;
+  justify-content: center;
+  padding: 0;
+}
+.n-winter-world .n-scene-toggle span {
+  display: none;
+}
+.n-winter-world .n-campaign-caption {
+  order: 1;
+  font-size: 9px;
+  letter-spacing: 0.09em;
+  max-width: 190px;
+  line-height: 1.6;
+}
+.n-winter-world .n-campaign-buttons {
+  order: 2;
+  gap: 10px;
+}
+.n-winter-world .n-campaign-buttons > button {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  min-height: 36px;
+  border: 0;
+  background: none;
+  border-radius: 0;
+}
+.n-winter-world .n-campaign-dots {
+  gap: 3px;
+}
+.n-winter-world .n-campaign-dots button {
+  width: 12px;
+  height: 36px;
+  min-height: 36px;
+  border: 0;
+  opacity: 1;
+  transform: none;
+  background: none;
+  overflow: visible;
+}
+.n-winter-world .n-campaign-dots button img,
+.n-winter-world .n-campaign-dots button small {
+  display: none;
+}
+.n-winter-world .n-campaign-dots button span {
+  display: block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #d7c29c55;
+}
+.n-winter-world .n-campaign-dots button[aria-pressed="true"] span {
+  width: 5px;
+  height: 5px;
+  background: #e6d2ac;
+}
+.n-winter-world .n-film-scroll {
+  font-size: 8px;
+  color: #b5ab98;
+}
+.n-winter-world .n-campaign-cursor {
+  width: 76px;
+  height: 76px;
+  font-size: 8px;
+  background: #0c151122;
+}
+@media (max-width: 1100px) and (min-width: 701px) {
+  .n-winter-world .n-campaign-slide {
+    left: 54%;
+    right: 5vw;
+  }
+  .n-winter-world .n-campaign-controls {
+    width: 41vw;
+    gap: 8px;
+  }
+  .n-winter-world .n-campaign .n-film-footer {
+    right: 5vw;
+  }
+  .n-winter-world .n-campaign h1 {
+    font-size: clamp(52px, 6.3vw, 72px);
+  }
+  .n-winter-world .n-campaign-caption {
+    max-width: 125px;
+    font-size: 8px;
+  }
+}
+@media (max-width: 700px) {
+  .n-winter-world .n-campaign-slide {
+    left: 24px;
+    right: 24px;
+    top: 100px;
+    height: 28svh;
+    max-height: 300px;
+    bottom: auto;
+  }
+  .n-winter-world .n-campaign .n-hero-copy {
+    width: 100%;
+    padding: calc(28svh + 60px) 24px 130px;
+  }
+  .n-winter-world .n-campaign h1 {
+    font-size: clamp(46px, 11.8vw, 70px);
+  }
+  .n-winter-world .n-campaign .n-film-footer {
+    left: 24px;
+    right: 24px;
+    bottom: 28px;
+  }
+  .n-winter-world .n-campaign-controls {
+    width: 100%;
+    gap: 12px;
+  }
+  .n-winter-world .n-campaign-caption {
+    font-size: 8px;
+    max-width: 145px;
+  }
+  .n-winter-world .n-campaign-buttons {
+    gap: 7px;
+  }
+}
+
+.n-winter-world .n-campaign-cursor {
+  transform: translate(calc(var(--cursor-x, -200px) - 38px), calc(var(--cursor-y, -200px) - 38px));
+}
+.n-winter-world .n-campaign-buttons > button {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+}
+.n-winter-world .n-scene-toggle {
+  min-width: 44px;
+}
