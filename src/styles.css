@@ -3623,3 +3623,49 @@ section[id] {
 .n-campaign.n-arrived .n-campaign-slide.is-active img {
   transform-origin: 50% 0%;
 }
+/* A photographed alpine night replaces the abstract light stage. */
+.n-intro-environment {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.n-intro-environment img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+.n-intro-environment-shade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(0deg, #02060680, transparent 40%, #02060633),
+    linear-gradient(90deg, #02060622, #02060655 45%, #02060655 55%, #02060622);
+}
+.n-intro .n-studio-vignette {
+  background: none;
+}
+.n-intro .n-monogram-shadow {
+  display: none;
+}
+.n-intro[data-state="entering"] .n-intro-environment img {
+  transform: scale(1.025);
+  transition: transform 1.4s ease-out;
+}
+@media (max-width: 700px) {
+  .n-intro-environment img {
+    object-position: 50% center;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .n-intro[data-state="entering"] .n-intro-environment img {
+    transform: none;
+    transition: none;
+  }
+}
+.n-intro-environment picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}

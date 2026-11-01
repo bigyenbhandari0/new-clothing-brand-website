@@ -12,13 +12,18 @@ export function WinterWeather({
   wind?: MutableRefObject<WindInput>;
 }) {
   const ref = useRef<HTMLCanvasElement>(null);
+  const motion = useRef(running);
+  motion.current = running;
+  const resume = useRef<(() => void) | null>(null);
+  useEffect(() => {
+    resume.current?.();
+  }, [running]);
   useEffect(() => {
     const canvas = ref.current;
     if (!canvas) return;
-    const ctx = canvas.getContext("2d", { alpha: !studio });
+    const ctx = canvas.getContext("2d", { alpha: true });
     if (!ctx) return;
-    const room = document.createElement("canvas");
-    const light = room.getContext("2d");
+
     const sprite = document.createElement("canvas");
     sprite.width = sprite.height = 32;
     const paint = sprite.getContext("2d")!;
@@ -28,62 +33,51 @@ export function WinterWeather({
     glow.addColorStop(1, "rgba(220,234,241,0)");
     paint.fillStyle = glow;
     paint.fillRect(0, 0, 32, 32);
+    const crystal = document.createElement("canvas");
+    crystal.width = crystal.height = 64;
+    const ice = crystal.getContext("2d")!;
+    ice.translate(32, 32);
+    ice.strokeStyle = "rgba(231,242,248,.8)";
+    ice.lineWidth = 1.35;
+    ice.lineCap = "round";
+    for (let arm = 0; arm < 6; arm++) {
+      ice.save();
+      ice.rotate((arm * Math.PI) / 3);
+      ice.beginPath();
+      ice.moveTo(0, 0);
+      ice.lineTo(0, -25);
+      for (const distance of [11, 18]) {
+        ice.moveTo(-6, -distance + 5);
+        ice.lineTo(0, -distance);
+        ice.lineTo(6, -distance + 5);
+      }
+      ice.stroke();
+      ice.restore();
+    }
+    let fade = motion.current ? 1 : 0;
     let w = 1,
       h = 1,
       scale = 1,
       raf = 0,
       last = 0,
       time = 0;
-    type Flake = { x: number; y: number; z: number; vx: number; vy: number; phase: number };
+    type Flake = {
+      x: number;
+      y: number;
+      z: number;
+      vx: number;
+      vy: number;
+      phase: number;
+      crystal: boolean;
+    };
     let flakes: Flake[] = [];
     const resize = () => {
       w = Math.max(1, canvas.clientWidth);
       h = Math.max(1, canvas.clientHeight);
       scale = Math.min(1, 1280 / w, 850 / h);
-      canvas.width = room.width = Math.round(w * scale);
-      canvas.height = room.height = Math.round(h * scale);
-      if (studio && light) {
-        // Bake smooth light scattering into pixels once, never polygonal light cones.
-        const pixels = light.createImageData(room.width, room.height);
-        const sy = h * (w < 700 ? 0.16 : 0.145);
-        for (let py = 0; py < room.height; py++)
-          for (let px = 0; px < room.width; px++) {
-            const x = px / scale,
-              y = py / scale,
-              dy = y - sy;
-            let illumination = 0;
-            if (dy > 0) {
-              const spread = 16 + dy * 0.24;
-              const fade = (1 - Math.exp(-dy / 35)) * Math.exp(-dy / (h * 0.28));
-              for (const side of [-1, 1]) {
-                const axis = w * 0.5 + side * (w < 700 ? 31 : 42) + side * dy * 0.07;
-                illumination += Math.exp(-0.5 * ((x - axis) / spread) ** 2) * fade * 0.21;
-              }
-            }
-            const index = (py * room.width + px) * 4;
-            pixels.data[index] = 3 + illumination * 230;
-            pixels.data[index + 1] = 5 + illumination * 217;
-            pixels.data[index + 2] = 5 + illumination * 183;
-            pixels.data[index + 3] = 255;
-          }
-        light.putImageData(pixels, 0, 0);
-        light.setTransform(scale, 0, 0, scale, 0, 0);
-        for (const side of [-1, 1]) {
-          const x = w * 0.5 + side * (w < 700 ? 31 : 42);
-          const halo = light.createRadialGradient(x, sy, 0, x, sy, 32);
-          halo.addColorStop(0, "#f5e3b326");
-          halo.addColorStop(1, "#f5e3b300");
-          light.fillStyle = halo;
-          light.fillRect(x - 32, sy - 32, 64, 64);
-          const metal = light.createLinearGradient(x, sy - 7, x, sy + 5);
-          metal.addColorStop(0, "#33372e");
-          metal.addColorStop(1, "#0c100d");
-          light.fillStyle = metal;
-          light.fillRect(x - 22, sy - 7, 44, 11);
-          light.fillStyle = "#e8ddbd";
-          light.fillRect(x - 16, sy + 2, 32, 2);
-        }
-      }
+      canvas.width = Math.round(w * scale);
+      canvas.height = Math.round(h * scale);
+      // The photographic environment supplies the light. No synthetic oval halo.
       flakes = Array.from({ length: w < 700 ? 80 : studio ? 220 : 145 }, () => {
         const z = Math.random();
         return {
@@ -93,22 +87,25 @@ export function WinterWeather({
           vx: 40 + z * 80,
           vy: 18 + z * 50,
           phase: Math.random() * Math.PI * 2,
+          crystal: z > 0.72 && Math.random() > 0.65,
         };
       });
     };
     const draw = (now: number) => {
       const dt = Math.min(last ? (now - last) / 1000 : 0, 1 / 30);
       last = now;
-      if (running) time += dt;
+      const moving = motion.current;
+      fade += ((moving ? 1 : 0) - fade) * (1 - Math.exp(-dt * (moving ? 4 : 7)));
+      if (!moving && fade < 0.015) fade = 0;
+      if (moving || fade > 0) time += dt;
       ctx.setTransform(1, 0, 0, 1, 0, 0);
-      if (studio) ctx.drawImage(room, 0, 0);
-      else ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.setTransform(scale, 0, 0, scale, 0, 0);
       const gust = 75 + Math.sin(time * 0.43) * 55 + Math.sin(time * 1.17) * 24;
       const input = wind?.current;
-      if (input && running) input.impulse *= Math.exp(-dt * 2.8);
+      if (input && (moving || fade > 0)) input.impulse *= Math.exp(-dt * 2.8);
       for (const p of flakes) {
-        if (running) {
+        if (moving || fade > 0) {
           const response = 1.2 + p.z * 2.5;
           const eddy =
             Math.sin(p.y * 0.009 + time * 0.9 + p.phase) * 26 +
@@ -133,18 +130,28 @@ export function WinterWeather({
         }
         const spread = 50 + Math.max(0, p.y - h * 0.15) * 0.28;
         const lit = Math.exp(-(((p.x - w * 0.5) / spread) ** 2));
-        ctx.globalAlpha = studio ? (0.08 + lit * 0.55) * (0.35 + p.z * 0.65) : 0.18 + p.z * 0.3;
+        ctx.globalAlpha =
+          (studio ? (0.15 + lit * 0.4) * (0.35 + p.z * 0.65) : 0.2 + p.z * 0.35) * fade;
         const r = (0.65 + p.z * p.z * 3.7) * (p.z > 0.87 ? 1.6 : 1);
-        ctx.drawImage(sprite, p.x - r, p.y - r, r * 2, r * 2);
+        if (fade === 0) continue;
+        if (p.crystal) {
+          const size = r * 2.1;
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.phase + time * (0.18 + p.z * 0.4));
+          ctx.drawImage(crystal, -size, -size, size * 2, size * 2);
+          ctx.restore();
+        } else ctx.drawImage(sprite, p.x - r, p.y - r, r * 2, r * 2);
       }
       ctx.globalAlpha = 1;
-      if (running && !document.hidden) raf = requestAnimationFrame(draw);
+      if ((moving || fade > 0) && !document.hidden) raf = requestAnimationFrame(draw);
     };
     const restart = () => {
       cancelAnimationFrame(raf);
       last = 0;
       if (!document.hidden) draw(performance.now());
     };
+    resume.current = restart;
     const observer = new ResizeObserver(() => {
       resize();
       restart();
@@ -154,11 +161,12 @@ export function WinterWeather({
     restart();
     document.addEventListener("visibilitychange", restart);
     return () => {
+      resume.current = null;
       cancelAnimationFrame(raf);
       observer.disconnect();
       document.removeEventListener("visibilitychange", restart);
     };
-  }, [running, studio, wind]);
+  }, [studio, wind]);
   return (
     <canvas
       ref={ref}

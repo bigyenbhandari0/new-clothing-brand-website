@@ -71,6 +71,13 @@ export function Intro() {
       aria-modal="true"
       aria-label="Welcome to Nivelle"
     >
+      <div className="n-intro-environment" aria-hidden="true">
+        <picture>
+          <source media="(max-width: 700px)" srcSet="/media/intro-alpine-night-mobile.webp" />
+          <img src="/media/intro-alpine-night.webp" alt="" fetchPriority="high" />
+        </picture>
+        <div className="n-intro-environment-shade" />
+      </div>
       <StudioLights reduced={reduced} />
       <div className="n-studio-vignette" aria-hidden="true" />
       <div className="n-intro-top">
