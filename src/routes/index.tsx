@@ -1,24 +1,40 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { WinterProvider } from "@/components/winter/useWinter";
+import { Intro } from "@/components/winter/Intro";
+import { Header } from "@/components/winter/Header";
+import { Hero } from "@/components/winter/Hero";
+import { Collection } from "@/components/winter/Collection";
+import { Styling } from "@/components/winter/Styling";
+import { Editorial } from "@/components/winter/Editorial";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "Your logo — Cold days. Warm layers." },
+      { name: "description", content: "A cozy winter clothing concept storefront: knits, coats and layers for the slower season." },
+      { property: "og:title", content: "Your logo — Cold days. Warm layers." },
+      { property: "og:description", content: "A cozy winter clothing concept storefront." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
 function Index() {
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
+    <WinterProvider>
+      <Intro />
+      <Header />
+      <main>
+        <Hero />
+        <Collection />
+        <Styling />
+        <Editorial />
+      </main>
+      <footer className="px-5 py-12 text-center text-xs text-muted-foreground">
+        Concept storefront — fictional collection, not for sale. Experience crafted by AUREN.
+      </footer>
+    </WinterProvider>
   );
 }
