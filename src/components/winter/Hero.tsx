@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, type CSSProperties } from "react";
 import { ArrowDown, ArrowUpRight, ArrowLeft, ArrowRight } from "lucide-react";
 import hero from "@/assets/hero-model.jpg";
 import morning from "@/assets/look-morning.jpg";
@@ -11,20 +11,37 @@ const slides = [
     fallback: hero,
     label: "The alpine evening",
     alt: "Oatmeal knitwear and cocoa wool layers outside an alpine chalet",
-    position: "65% center",
+    position: "76% top",
   },
   {
     image: "/media/campaign-pines.webp",
     fallback: morning,
     label: "Among the pines",
     alt: "Pine outerwear and ivory knitwear in a snowy alpine forest",
-    position: "65% center",
+    position: "76% top",
+  },
+  {
+    image: "/media/campaign-terrace.webp",
+    fallback: hero,
+    label: "First light",
+    alt: "Cocoa wool tailoring on a snowy alpine terrace",
+    position: "76% top",
+  },
+  {
+    image: "/media/campaign-lodge.webp",
+    fallback: morning,
+    label: "The quiet hours",
+    alt: "Ivory knitwear and burgundy scarf beside a warm lodge window",
+    position: "76% top",
   },
 ];
 
 export function Hero() {
   const { entered } = useWinter();
   const [active, setActive] = useState(0);
+  const surface = useRef<HTMLDivElement>(null);
+  const cursor = useRef<HTMLDivElement>(null);
+  const mouse = useRef<{ x: number; y: number } | null>(null);
   const start = useRef<{ x: number; y: number } | null>(null);
   const change = (direction: number) =>
     setActive((i) => (i + direction + slides.length) % slides.length);
@@ -35,6 +52,14 @@ export function Hero() {
       aria-labelledby="hero-title"
       aria-roledescription="carousel"
       aria-label="Winter campaign"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.target !== e.currentTarget) return;
+        if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+          e.preventDefault();
+          change(e.key === "ArrowRight" ? 1 : -1);
+        }
+      }}
     >
       <div className="n-campaign-images" aria-hidden="true">
         {slides.map((slide, i) => (
@@ -42,7 +67,7 @@ export function Hero() {
             <img
               src={slide.image}
               alt={slide.alt}
-              style={{ objectPosition: slide.position }}
+              style={{ "--campaign-position": slide.position } as CSSProperties}
               fetchPriority={i === 0 ? "high" : "auto"}
               onError={(e) => {
                 if (!e.currentTarget.src.endsWith(slide.fallback))
@@ -54,7 +79,43 @@ export function Hero() {
         <div className="n-film-shade" />
       </div>
       <div
+        ref={surface}
         className="n-campaign-swipe"
+        onPointerDown={(e) => {
+          if (e.pointerType !== "mouse") return;
+          mouse.current = { x: e.clientX, y: e.clientY };
+          e.currentTarget.setPointerCapture(e.pointerId);
+          e.currentTarget.classList.add("is-dragging");
+        }}
+        onPointerMove={(e) => {
+          if (e.pointerType !== "mouse") return;
+          const rect = e.currentTarget.getBoundingClientRect();
+          cursor.current?.style.setProperty("--cursor-x", `${e.clientX - rect.left}px`);
+          cursor.current?.style.setProperty("--cursor-y", `${e.clientY - rect.top}px`);
+          e.currentTarget.classList.add("is-hovering");
+          if (mouse.current) {
+            const distance = Math.max(-80, Math.min(80, (e.clientX - mouse.current.x) * 0.22));
+            e.currentTarget.parentElement?.style.setProperty("--campaign-drag", `${distance}px`);
+          }
+        }}
+        onPointerUp={(e) => {
+          const m = mouse.current;
+          mouse.current = null;
+          e.currentTarget.classList.remove("is-dragging");
+          e.currentTarget.parentElement?.style.setProperty("--campaign-drag", "0px");
+          if (
+            m &&
+            Math.abs(e.clientX - m.x) > 55 &&
+            Math.abs(e.clientX - m.x) > Math.abs(e.clientY - m.y)
+          )
+            change(e.clientX < m.x ? 1 : -1);
+        }}
+        onPointerCancel={(e) => {
+          mouse.current = null;
+          e.currentTarget.classList.remove("is-dragging");
+          e.currentTarget.parentElement?.style.setProperty("--campaign-drag", "0px");
+        }}
+        onPointerLeave={(e) => e.currentTarget.classList.remove("is-hovering")}
         onTouchStart={(e) => {
           const t = e.touches[0];
           if (t) start.current = { x: t.clientX, y: t.clientY };
@@ -75,7 +136,13 @@ export function Hero() {
           start.current = null;
         }}
         aria-hidden="true"
-      />
+      >
+        <div ref={cursor} className="n-campaign-cursor">
+          <ArrowLeft size={12} />
+          <span>DRAG</span>
+          <ArrowRight size={12} />
+        </div>
+      </div>
       <div className="n-hero-copy">
         <p className="n-eyebrow">
           <span className="n-line" />
@@ -117,7 +184,9 @@ export function Hero() {
                   aria-label={`Show ${s.label}`}
                   aria-pressed={active === i}
                 >
+                  <img src={s.image} alt="" aria-hidden="true" />
                   <span />
+                  <small>0{i + 1}</small>
                 </button>
               ))}
             </div>

@@ -93,7 +93,7 @@ export function Header() {
   return (
     <header
       ref={root}
-      className={`n-header n-header-v3 ${scrolled ? "n-header-scrolled" : ""} ${open ? "n-nav-is-open" : ""}`}
+      className={`n-header n-header-v3 n-header-glass ${scrolled ? "n-header-scrolled" : ""} ${open ? "n-nav-is-open" : ""}`}
     >
       <div className="n-nav-shell">
         <a href="#top" aria-label="Nivelle home" className="n-brand" onClick={() => go("top")}>

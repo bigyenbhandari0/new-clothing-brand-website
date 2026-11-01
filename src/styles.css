@@ -3136,3 +3136,346 @@ section[id] {
   transition: none;
   transform: none;
 }
+
+/* Transparent house navigation over the campaign. */
+.n-header-glass {
+  background: transparent;
+  color: #f5f1e7;
+  border-bottom: 1px solid #f5f1e71c;
+  backdrop-filter: none;
+  box-shadow: none;
+  transition:
+    background 0.5s,
+    backdrop-filter 0.5s,
+    border-color 0.5s;
+}
+.n-header-glass .n-nav-shell {
+  max-width: none;
+  min-height: 96px;
+  padding: 0 5vw;
+  gap: 42px;
+}
+.n-header-glass .nivelle-logo > span {
+  font-size: 28px;
+  letter-spacing: 0.22em;
+}
+.n-header-glass .nivelle-logo small {
+  font-size: 6px;
+  letter-spacing: 0.2em;
+  margin-top: 10px;
+}
+.n-header-glass .n-brand .nivelle-emblem {
+  color: #d9c6a4;
+  width: 34px;
+  height: 44px;
+}
+.n-header-glass .n-desktop-nav {
+  gap: 34px;
+}
+.n-header-glass .n-nav-link {
+  color: #f5f1e7c4;
+  font-size: 11px;
+  letter-spacing: 0.03em;
+}
+.n-header-glass .n-nav-link:hover,
+.n-header-glass .n-nav-link.is-active,
+.n-header-glass .n-nav-link[aria-expanded="true"] {
+  color: #fff8e9;
+}
+.n-header-glass .n-nav-link:after {
+  background: #d9c6a4;
+  bottom: 5px;
+}
+.n-header-glass .n-header-cta {
+  color: #f5f1e7;
+  font-size: 11px;
+  padding: 12px 18px;
+  border: 1px solid #f5f1e749;
+  border-radius: 2px;
+  transition:
+    background 0.3s,
+    border-color 0.3s;
+}
+.n-header-glass .n-header-cta:hover {
+  background: #f5f1e715;
+  border-color: #d9c6a4;
+}
+.n-header-glass .n-menu-toggle {
+  color: #f5f1e7;
+}
+.n-header-glass.n-header-scrolled,
+.n-header-glass.n-nav-is-open {
+  background: #18201be0;
+  backdrop-filter: blur(22px);
+  border-color: #d9c6a426;
+}
+.n-header-glass.n-header-scrolled .n-nav-shell {
+  min-height: 78px;
+  transition: min-height 0.4s;
+}
+.n-header-glass .n-mega-menu,
+.n-header-glass .n-mobile-nav {
+  color: #302a25;
+}
+.n-header-glass .n-mega-menu {
+  border: 1px solid #c4b89c55;
+  background: #f1ede5f5;
+  backdrop-filter: blur(20px);
+  border-radius: 4px;
+  box-shadow: 0 24px 60px #080a0940;
+}
+
+/* Keep the photograph full bleed; anchor the crop at the top to preserve the face. */
+.n-campaign {
+  background: #18201e;
+}
+.n-campaign-images {
+  inset: 0;
+  background: linear-gradient(120deg, #192420, #26231e);
+}
+.n-campaign-slide {
+  top: 0;
+  transform: translateX(var(--campaign-drag, 0px));
+  transition:
+    opacity 900ms ease,
+    transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.n-campaign-slide img {
+  object-position: var(--campaign-position, 76% top);
+  transform-origin: 76% 0%;
+  transform: scale(1.025);
+  transition: transform 7s cubic-bezier(0.2, 0.5, 0.3, 1);
+}
+.n-campaign.n-arrived .n-campaign-slide.is-active img {
+  transform: scale(1);
+}
+.n-campaign .n-film-shade {
+  background:
+    linear-gradient(180deg, #101a17bf 0, #101a1755 110px, transparent 230px),
+    linear-gradient(90deg, #111a17bb 0%, #111a1780 28%, #111a170d 64%),
+    linear-gradient(0deg, #121a17bf, transparent 35%);
+}
+.n-campaign .n-hero-copy {
+  width: 62%;
+  padding-bottom: 160px;
+}
+.n-campaign .n-film-footer {
+  bottom: 30px;
+  align-items: flex-end;
+}
+.n-campaign-controls {
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 14px;
+}
+.n-campaign-buttons {
+  gap: 14px;
+}
+.n-campaign-buttons > button {
+  width: 48px;
+  height: 48px;
+  transition:
+    background 0.3s,
+    color 0.3s,
+    transform 0.3s;
+}
+.n-campaign-buttons > button:hover {
+  background: #eee5d4;
+  color: #18201e;
+  transform: scale(1.06);
+}
+.n-campaign-buttons > button:active {
+  transform: scale(0.93);
+}
+.n-campaign-dots {
+  gap: 8px;
+}
+.n-campaign-dots button {
+  position: relative;
+  width: 72px;
+  height: 48px;
+  min-width: 0;
+  overflow: hidden;
+  padding: 0;
+  border: 1px solid #f5f1e733;
+  border-radius: 3px;
+  opacity: 0.55;
+  transition:
+    opacity 0.4s,
+    transform 0.4s,
+    border-color 0.4s;
+}
+.n-campaign-dots button:hover {
+  opacity: 1;
+  transform: translateY(-4px);
+}
+.n-campaign-dots button[aria-pressed="true"] {
+  opacity: 1;
+  border-color: #e5d6bd;
+  transform: translateY(-4px);
+}
+.n-campaign-dots button img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+.n-campaign-dots button span {
+  display: none;
+}
+.n-campaign-dots button small {
+  position: absolute;
+  bottom: 3px;
+  left: 5px;
+  color: white;
+  font-size: 8px;
+  text-shadow: 0 1px 5px #000;
+}
+.n-campaign-swipe {
+  cursor: grab;
+}
+.n-campaign-swipe.is-dragging {
+  cursor: grabbing;
+}
+.n-campaign-cursor {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100px;
+  height: 100px;
+  border: 1px solid #eee5d466;
+  border-radius: 50%;
+  background: #eee5d40a;
+  backdrop-filter: blur(3px);
+  color: #fff8e9;
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  transform: translate(calc(var(--cursor-x, -200px) - 50px), calc(var(--cursor-y, -200px) - 50px));
+  opacity: 0;
+  transition:
+    opacity 0.3s,
+    transform 0.18s ease-out;
+  pointer-events: none;
+}
+.n-campaign-swipe.is-hovering .n-campaign-cursor {
+  opacity: 1;
+}
+.n-campaign-swipe.is-dragging .n-campaign-cursor {
+  background: #eee5d424;
+}
+.n-campaign:focus-visible {
+  outline: 2px solid #c4b89c;
+  outline-offset: -4px;
+}
+/* Ambient edges remain visible across the whole room. */
+.n-studio-vignette {
+  background: radial-gradient(ellipse at 50% 42%, transparent 25%, #0305040d 65%, #03050425);
+}
+.n-intro-center {
+  filter: drop-shadow(0 4px 25px #0009);
+}
+@media (max-width: 1100px) {
+  .n-header-glass .n-desktop-nav {
+    gap: 18px;
+  }
+  .n-header-glass .n-nav-shell {
+    gap: 22px;
+  }
+}
+@media (max-width: 700px) {
+  .n-header-glass .n-nav-shell {
+    min-height: 78px;
+    padding: 0 22px;
+    gap: 14px;
+  }
+  .n-header-glass .nivelle-logo > span {
+    font-size: 22px;
+  }
+  .n-header-glass .n-brand .nivelle-emblem {
+    width: 26px;
+    height: 35px;
+  }
+  .n-header-glass .n-header-cta {
+    display: none;
+  }
+  .n-header-glass .n-menu-toggle {
+    margin-left: auto;
+  }
+  .n-campaign-slide {
+    top: 0;
+  }
+  .n-campaign-slide img {
+    object-position: 80% top;
+  }
+  .n-campaign .n-hero-copy {
+    width: 100%;
+    padding: 300px 24px 170px;
+  }
+  .n-campaign .n-film-shade {
+    background:
+      linear-gradient(180deg, #101a17a6, transparent 150px),
+      linear-gradient(0deg, #121a17f2 0%, #121a17a6 35%, transparent 75%);
+  }
+  .n-campaign .n-film-footer {
+    left: 20px;
+    right: 20px;
+    bottom: 22px;
+    gap: 10px;
+  }
+  .n-campaign .n-film-scroll {
+    display: none;
+  }
+  .n-campaign-controls {
+    width: 100%;
+    align-items: stretch;
+    gap: 13px;
+  }
+  .n-campaign-caption {
+    font-size: 10px;
+  }
+  .n-campaign-buttons {
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .n-campaign-dots {
+    gap: 5px;
+  }
+  .n-campaign-dots button {
+    width: 45px;
+    height: 40px;
+  }
+  .n-campaign-buttons > button {
+    width: 44px;
+    height: 44px;
+  }
+  .n-campaign-cursor {
+    display: none;
+  }
+}
+@media (hover: none), (prefers-reduced-motion: reduce) {
+  .n-campaign-cursor {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .n-campaign-slide,
+  .n-campaign-slide img {
+    transition: none;
+    transform: none;
+  }
+}
+.n-header-glass .n-menu-lines i {
+  background: currentColor;
+}
+@media (prefers-reduced-motion: reduce) {
+  .n-campaign.n-arrived .n-campaign-slide.is-active img {
+    transform: none;
+  }
+}
+.reduced .n-campaign.n-arrived .n-campaign-slide.is-active img {
+  transform: none;
+}
