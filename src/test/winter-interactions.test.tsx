@@ -24,6 +24,7 @@ afterEach(() => {
   cleanup();
   vi.useRealTimers();
   vi.unstubAllGlobals();
+  vi.restoreAllMocks();
 });
 
 function Entrance() {
@@ -57,7 +58,7 @@ describe("Winter experience", () => {
     act(() => vi.advanceTimersByTime(850));
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     expect(screen.getByTestId("store")).not.toHaveAttribute("inert");
-    expect(sessionStorage.getItem("nivelle-intro-seen")).toBe("1");
+    expect(sessionStorage.getItem("nivelle-intro-v2-seen")).toBe("1");
     fireEvent.click(screen.getByRole("button", { name: "Replay entrance" }));
     expect(screen.getByRole("dialog")).toHaveAttribute("data-state", "idle");
     fireEvent.keyDown(screen.getByRole("dialog"), { key: "Escape" });
@@ -89,5 +90,36 @@ describe("Winter experience", () => {
     fireEvent.load(screen.getByAltText("Nivelle Snow day winter outfit"));
     expect(snow).toHaveAttribute("aria-pressed", "true");
     expect(screen.getByAltText("Nivelle Snow day winter outfit")).toHaveClass("is-active");
+  });
+  it("switches cached SSR images even when no load event is received after hydration", () => {
+    vi.spyOn(HTMLImageElement.prototype, "complete", "get").mockReturnValue(true);
+    vi.spyOn(HTMLImageElement.prototype, "naturalWidth", "get").mockReturnValue(1000);
+    render(<Styling />);
+    fireEvent.click(screen.getByRole("button", { name: /02 Snow day/ }));
+    expect(screen.getByAltText("Nivelle Snow day winter outfit")).toHaveClass("is-active");
+    expect(screen.queryByText("Preparing your look…")).not.toBeInTheDocument();
+  });
+
+  it("does not let a late image load override the most recent selection", () => {
+    render(<Styling />);
+    fireEvent.click(screen.getByRole("button", { name: /02 Snow day/ }));
+    fireEvent.load(screen.getByAltText("Nivelle Fireside evening winter outfit"));
+    fireEvent.click(screen.getByRole("button", { name: /03 Fireside evening/ }));
+    fireEvent.load(screen.getByAltText("Nivelle Snow day winter outfit"));
+    expect(screen.getByAltText("Nivelle Fireside evening winter outfit")).toHaveClass("is-active");
+    expect(screen.queryByText("Preparing your look…")).not.toBeInTheDocument();
+  });
+
+  it("keeps the existing outfit and ends loading if an image fails or times out", () => {
+    vi.useFakeTimers();
+    render(<Styling />);
+    fireEvent.click(screen.getByRole("button", { name: /02 Snow day/ }));
+    fireEvent.error(screen.getByAltText("Nivelle Snow day winter outfit"));
+    expect(screen.getByRole("status")).toHaveTextContent("could not load");
+    expect(screen.queryByText("Preparing your look…")).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: /03 Fireside evening/ }));
+    act(() => vi.advanceTimersByTime(8000));
+    expect(screen.queryByText("Preparing your look…")).not.toBeInTheDocument();
+    expect(screen.getByAltText("Nivelle Cabin morning winter outfit")).toHaveClass("is-active");
   });
 });

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import cabin from "@/assets/intro-cabin.jpg";
 import { ArrowUpRight } from "lucide-react";
 import { SnowCanvas } from "./SnowCanvas";
 import { SpinningMark } from "./SpinningMark";
@@ -17,7 +18,7 @@ export function Intro() {
   const finish = () => {
     timers.current.forEach(clearTimeout);
     try {
-      sessionStorage.setItem("nivelle-intro-seen", "1");
+      sessionStorage.setItem("nivelle-intro-v2-seen", "1");
     } catch {}
     setState("done");
     setEntered(true);
@@ -71,32 +72,47 @@ export function Intro() {
       aria-modal="true"
       aria-label="Welcome to Nivelle"
     >
+      <div className="n-intro-scene" aria-hidden="true">
+        <img src={cabin} alt="" width={1600} height={914} />
+        <div className="n-intro-mist" />
+        <div className="n-stage-beam n-stage-beam-left" />
+        <div className="n-stage-beam n-stage-beam-right" />
+        <div className="n-stage-floor" />
+        <div className="n-stage-horizon" />
+      </div>
       <div className="n-intro-atmosphere" />
       <div className="n-intro-halo" />
       {!reduced && (
         <SnowCanvas
           className="n-intro-snow"
-          density={3.8}
+          density={4.5}
           minR={0.7}
-          maxR={2.6}
+          maxR={3.1}
           speed={0.48}
           color="224,216,203"
         />
       )}
       <div className="n-intro-top">
-        <span>THE WINTER ATELIER</span>
+        <span>NIVELLE / THE WINTER ATELIER</span>
         <button onClick={finish} className="n-intro-skip">
           Skip intro <ArrowUpRight size={12} />
         </button>
       </div>
       <div className="n-intro-center">
+        <span className="n-intro-prelude">A SEASON OF STILLNESS</span>
         <SpinningMark reduced={reduced} />
         <div className="n-intro-wordmark">NIVELLE</div>
-        <p className="n-intro-tagline">Winter, in its quietest form.</p>
+        <p className="n-intro-tagline">
+          Outside, the world slows.
+          <br />
+          Inside, winter feels different.
+        </p>
         <button className="n-enter" onClick={enter} disabled={state !== "idle"}>
           Enter the atelier <ArrowUpRight size={16} />
         </button>
-        <span className="n-intro-season">THE WINTER EDIT — VOLUME 01</span>
+        <span className="n-intro-season">
+          <i /> THE WINTER EDIT — VOLUME 01 <i />
+        </span>
       </div>
       <div className="n-intro-footer">
         <span>WARMTH, WITH INTENTION.</span>

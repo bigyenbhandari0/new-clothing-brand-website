@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { looks } from "@/lib/catalog";
 import { useReveal } from "./useWinter";
@@ -6,12 +6,56 @@ import { useReveal } from "./useWinter";
 export function Styling() {
   const [selected, setSelected] = useState(0);
   const [pending, setPending] = useState<number | null>(null);
-  const [loaded, setLoaded] = useState<number[]>([]);
+  const [error, setError] = useState("");
+  const images = useRef<Array<HTMLImageElement | null>>([]);
+  const available = useRef(new Set<number>());
+  const requested = useRef<number | null>(null);
+  const timeout = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const ref = useReveal<HTMLDivElement>();
   const look = looks[selected] ?? looks[0];
+  const commit = (i: number) => {
+    clearTimeout(timeout.current);
+    requested.current = null;
+    setPending(null);
+    setError("");
+    setSelected(i);
+  };
+  const loaded = (i: number) => {
+    available.current.add(i);
+    if (requested.current === i) commit(i);
+  };
+  const failed = (i: number) => {
+    available.current.delete(i);
+    if (requested.current !== i) return;
+    clearTimeout(timeout.current);
+    requested.current = null;
+    setPending(null);
+    setError(
+      "This look could not load. Your current look is still here. Please try another look or retry.",
+    );
+  };
+  useEffect(() => {
+    // SSR images can finish loading before React attaches onLoad. Inspect the
+    // actual elements as well; event history is not an image-readiness signal.
+    images.current.forEach((img, i) => {
+      if (img?.complete && img.naturalWidth > 0) available.current.add(i);
+    });
+    return () => clearTimeout(timeout.current);
+  }, []);
   const choose = (i: number) => {
-    if (loaded.includes(i)) setSelected(i);
-    else setPending(i);
+    clearTimeout(timeout.current);
+    requested.current = null;
+    setPending(null);
+    setError("");
+    const img = images.current[i];
+    if (available.current.has(i) || (img?.complete && img.naturalWidth > 0)) {
+      commit(i);
+      return;
+    }
+    requested.current = i;
+    setPending(i);
+    if (img?.complete && img.naturalWidth === 0) img.src = looks[i]!.image;
+    timeout.current = setTimeout(() => failed(i), 8000);
   };
   return (
     <section id="look" className="n-look n-section" aria-labelledby="look-title">
@@ -20,19 +64,17 @@ export function Styling() {
           {looks.map((l, i) => (
             <img
               key={l.id}
+              ref={(element) => {
+                images.current[i] = element;
+              }}
               src={l.image}
               alt={`Nivelle ${l.name} winter outfit`}
               width={1000}
               height={1375}
               loading="eager"
               className={selected === i ? "is-active" : ""}
-              onLoad={() => {
-                setLoaded((old) => (old.includes(i) ? old : [...old, i]));
-                if (pending === i) {
-                  setSelected(i);
-                  setPending(null);
-                }
-              }}
+              onLoad={() => loaded(i)}
+              onError={() => failed(i)}
             />
           ))}
           <span className="n-look-photo-label">NIVELLE / WINTER STORIES / 0{selected + 1}</span>
@@ -61,6 +103,11 @@ export function Styling() {
               </button>
             ))}
           </div>
+          {error && (
+            <p className="n-look-error" role="status">
+              {error}
+            </p>
+          )}
           <div className="n-look-pieces" aria-live="polite">
             <span className="n-eyebrow">IN THIS LOOK</span>
             <p>{look.pieces.join(" / ")}</p>

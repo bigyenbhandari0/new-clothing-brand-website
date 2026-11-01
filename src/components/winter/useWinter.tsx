@@ -28,7 +28,7 @@ export function WinterProvider({ children }: { children: ReactNode }) {
     upd();
     mq.addEventListener("change", upd);
     try {
-      if (sessionStorage.getItem("nivelle-intro-seen")) setEntered(true);
+      if (sessionStorage.getItem("nivelle-intro-v2-seen")) setEntered(true);
     } catch {
       /* Keep the experience usable when browser storage is blocked. */
     }
@@ -37,7 +37,7 @@ export function WinterProvider({ children }: { children: ReactNode }) {
 
   const replay = () => {
     try {
-      sessionStorage.removeItem("nivelle-intro-seen");
+      sessionStorage.removeItem("nivelle-intro-v2-seen");
     } catch {
       /* Optional session. */
     }

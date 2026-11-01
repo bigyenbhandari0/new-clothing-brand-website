@@ -1940,3 +1940,383 @@ section[id] {
     transform: translate(-50%, -50%);
   }
 }
+/* A sculptural winter prologue: real depth in WebGL and in the CSS fallback. */
+.n-look-error {
+  margin-top: 18px;
+  color: #e3c7a1;
+  font-size: 11px;
+  line-height: 1.8;
+}
+.n-intro {
+  background: #101715;
+}
+.n-intro-scene {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.n-intro-scene > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 54%;
+  opacity: 0.38;
+  filter: saturate(0.5) brightness(0.65);
+  transform: scale(1.08);
+  animation: n-winter-arrival 16s ease-out both;
+}
+@keyframes n-winter-arrival {
+  from {
+    transform: scale(1.16);
+    opacity: 0.1;
+  }
+  to {
+    transform: scale(1.08);
+    opacity: 0.38;
+  }
+}
+.n-intro-atmosphere {
+  background:
+    linear-gradient(90deg, #0c1519bd, #15201c50 45%, #0c1519a6),
+    linear-gradient(180deg, #09120f9c, transparent 35%, #0d1718b0 78%, #0a1414);
+}
+.n-intro-atmosphere:after {
+  opacity: 0.5;
+}
+.n-intro-mist {
+  position: absolute;
+  inset: 25% -20% -20%;
+  background: radial-gradient(ellipse at 40% 60%, #b1bbae1c, transparent 52%);
+  filter: blur(40px);
+  animation: n-mist 18s ease-in-out infinite alternate;
+}
+@keyframes n-mist {
+  to {
+    transform: translateX(7%);
+  }
+}
+.n-stage-beam {
+  position: absolute;
+  width: 48%;
+  height: 90%;
+  top: -8%;
+  clip-path: polygon(46% 0, 54% 0, 100% 100%, 0 100%);
+  filter: blur(14px);
+  pointer-events: none;
+}
+.n-stage-beam-left {
+  left: 5%;
+  background: linear-gradient(#f6e6bd38, #dedfc31b 35%, transparent 85%);
+  transform: rotate(-16deg);
+  transform-origin: 50% 0;
+}
+.n-stage-beam-right {
+  right: 7%;
+  background: linear-gradient(#c0d9e92e, #afc8cb0b 48%, transparent 85%);
+  transform: rotate(17deg);
+  transform-origin: 50% 0;
+}
+.n-stage-floor {
+  position: absolute;
+  width: 90vw;
+  height: 28vw;
+  min-height: 180px;
+  left: 50%;
+  top: 61%;
+  transform: translateX(-50%) perspective(700px) rotateX(67deg);
+  border-radius: 50%;
+  background: radial-gradient(ellipse, #8d9a7d36, #7f927516 25%, transparent 69%);
+  border-top: 1px solid #d8d6b21c;
+}
+.n-stage-horizon {
+  position: absolute;
+  width: 56%;
+  height: 1px;
+  left: 22%;
+  top: 74%;
+  background: linear-gradient(90deg, transparent, #c7cdb330, transparent);
+}
+.n-intro-halo {
+  top: 30%;
+  width: 52vw;
+  height: 42vw;
+  max-height: 550px;
+  background: radial-gradient(ellipse, #d4c4940f, transparent 68%);
+  filter: blur(25px);
+}
+.n-intro-center {
+  top: 48%;
+  transform: translate(-50%, -50%);
+}
+.n-intro-prelude {
+  font-size: 7px;
+  letter-spacing: 0.28em;
+  color: #bdc5ae;
+  margin-bottom: 6px;
+}
+.n-spinning-mark.n-sculpture {
+  width: 280px;
+  height: 330px;
+  margin-bottom: 14px;
+}
+.n-solid-logo {
+  position: absolute;
+  inset: 12% 12% 9%;
+  perspective: 850px;
+}
+.n-logo-volume {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  animation: n-solid-turn 11s linear infinite;
+}
+.n-logo-slice {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  backface-visibility: visible;
+}
+.n-logo-slice svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.n-logo-edge {
+  filter: brightness(0.75);
+}
+.n-logo-face {
+  filter: drop-shadow(0 1px 0 #f4e0b975);
+}
+.n-solid-logo.is-still .n-logo-volume {
+  animation: none;
+  transform: rotateX(-8deg) rotateY(-28deg);
+}
+@keyframes n-solid-turn {
+  from {
+    transform: rotateX(-8deg) rotateY(-28deg);
+  }
+  to {
+    transform: rotateX(-8deg) rotateY(332deg);
+  }
+}
+.n-monogram-shadow {
+  position: absolute;
+  bottom: 0;
+  left: 20%;
+  right: 20%;
+  height: 10%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, #0009, transparent 70%);
+  filter: blur(6px);
+  transform: scaleY(0.5);
+  pointer-events: none;
+}
+.n-intro-wordmark {
+  position: relative;
+  font-size: 52px;
+  letter-spacing: 0.28em;
+  padding-left: 0.28em;
+  text-shadow: 0 3px 22px #030a08;
+}
+.n-intro-tagline {
+  color: #bbc4af;
+  font-size: 22px;
+  line-height: 1.3;
+  margin-top: 17px;
+  text-shadow: 0 2px 15px #0009;
+}
+.n-enter {
+  background: linear-gradient(115deg, #c9c6a812, #e2d0a406);
+  border-color: #b8ba9b70;
+  margin-top: 28px;
+  position: relative;
+  overflow: hidden;
+}
+.n-enter:before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent, #e3d5ad1c, transparent);
+  transform: translateX(-130%);
+  transition: transform 0.9s;
+}
+.n-enter:hover:before {
+  transform: translateX(130%);
+}
+.n-intro-season {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  margin-top: 23px;
+}
+.n-intro-season i {
+  display: block;
+  width: 24px;
+  height: 1px;
+  background: #a6af9340;
+}
+.n-intro[data-state="entering"] .n-intro-scene {
+  transform: scale(1.045);
+  transition: transform 1.5s var(--ease-out);
+}
+.n-intro[data-state="entering"] .n-spinning-mark {
+  transform: scale(1.08) translateY(-5px);
+}
+.n-intro[data-state="leaving"] .n-intro-center {
+  transform: translate(-50%, -50%) scale(1.04);
+}
+@media (max-width: 700px) {
+  .n-intro-top {
+    font-size: 6px;
+    letter-spacing: 0.12em;
+  }
+  .n-intro-center {
+    top: 47%;
+    transform: translate(-50%, -50%);
+  }
+  .n-spinning-mark.n-sculpture {
+    width: 230px;
+    height: 275px;
+    margin-bottom: 15px;
+  }
+  .n-intro-wordmark {
+    font-size: 47px;
+    letter-spacing: 0.22em;
+    padding-left: 0.22em;
+  }
+  .n-intro-prelude {
+    font-size: 6px;
+    letter-spacing: 0.24em;
+    margin-bottom: 2px;
+  }
+  .n-intro-tagline {
+    font-size: 21px;
+    line-height: 1.35;
+  }
+  .n-intro-scene > img {
+    object-position: 50% 58%;
+    opacity: 0.35;
+  }
+  .n-stage-beam {
+    width: 90%;
+    height: 80%;
+  }
+  .n-stage-beam-left {
+    left: -30%;
+  }
+  .n-stage-beam-right {
+    right: -30%;
+  }
+  .n-stage-horizon {
+    width: 90%;
+    left: 5%;
+    top: 70%;
+  }
+  .n-stage-floor {
+    top: 60%;
+    width: 150vw;
+    height: 55vw;
+  }
+  .n-intro-season {
+    font-size: 6px;
+  }
+}
+@media (max-height: 700px) {
+  .n-spinning-mark.n-sculpture {
+    height: 210px;
+    width: 185px;
+  }
+  .n-intro-wordmark {
+    font-size: 40px;
+  }
+  .n-intro-tagline {
+    font-size: 19px;
+    margin-top: 12px;
+  }
+  .n-enter {
+    margin-top: 20px;
+  }
+  .n-intro-season {
+    margin-top: 17px;
+  }
+}
+@media (max-height: 480px) and (orientation: landscape) {
+  .n-intro-center {
+    width: 80%;
+    display: grid;
+    grid-template-columns: 40% 60%;
+    grid-template-rows: auto auto auto auto;
+    column-gap: 20px;
+    text-align: left;
+  }
+  .n-spinning-mark.n-sculpture {
+    grid-row: 1/6;
+    grid-column: 1;
+    margin: 0;
+    justify-self: center;
+    width: 190px;
+    height: 235px;
+  }
+  .n-intro-prelude,
+  .n-intro-wordmark,
+  .n-intro-tagline,
+  .n-enter,
+  .n-intro-season {
+    grid-column: 2;
+  }
+  .n-intro-wordmark {
+    font-size: 37px;
+    padding-left: 0;
+  }
+  .n-intro-prelude {
+    margin-bottom: 12px;
+  }
+  .n-enter {
+    min-width: 0;
+    width: 200px;
+  }
+  .n-intro-season {
+    font-size: 5px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .n-logo-volume {
+    animation: none;
+    transform: rotateX(-8deg) rotateY(-28deg);
+  }
+  .n-intro-mist {
+    animation: none;
+  }
+  .n-intro-scene > img {
+    animation: none;
+    opacity: 0.38;
+  }
+}
+/* Diffuse studio light, with no hard polygon edges. */
+.n-stage-beam {
+  clip-path: none;
+  filter: blur(42px);
+}
+.n-stage-beam-left {
+  background: radial-gradient(ellipse at 50% 0%, #ece5c847, #d6d5b317 35%, transparent 70%);
+}
+.n-stage-beam-right {
+  background: radial-gradient(ellipse at 50% 0%, #c7ddec36, #abc3ce14 35%, transparent 70%);
+}
+.n-intro-atmosphere {
+  background:
+    linear-gradient(90deg, #0c15199c, #15201c24 45%, #0c151985),
+    linear-gradient(180deg, #09120f85, transparent 35%, #0d17185c 78%, #0a1414);
+}
+@keyframes n-winter-arrival {
+  from {
+    transform: scale(1.16);
+    opacity: 0.15;
+  }
+  to {
+    transform: scale(1.08);
+    opacity: 0.6;
+  }
+}
