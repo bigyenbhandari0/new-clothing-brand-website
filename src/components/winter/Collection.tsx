@@ -42,7 +42,7 @@ function Card({ p, onOpen }: { p: Product; onOpen: (p: Product, v: number) => vo
       onPointerLeave={reset}
       className="group rounded-2xl bg-card p-3 shadow-soft transition-transform duration-500 ease-out active:scale-[0.98]"
     >
-      <button onClick={() => onOpen(p, v)} className="block w-full text-left" aria-label={`View ${p.name}, ${p.variants[v].name}`}>
+      <button onClick={() => onOpen(p, v)} className="block w-full text-left" aria-label={`View ${p.name}, ${p.variants[v]?.name}`}>
         <div className="relative aspect-[4/5] overflow-hidden rounded-xl bg-muted">
           {p.variants.map((vv, i) => (
             <img key={vv.name} src={vv.image} alt={`${p.name} in ${vv.name}`} width={800} height={1000} loading="lazy"
@@ -54,7 +54,7 @@ function Card({ p, onOpen }: { p: Product; onOpen: (p: Product, v: number) => vo
       </button>
       <div className="mt-3 flex items-center justify-between px-1 pb-1">
         <Swatches p={p} active={v} onPick={setV} />
-        <span className="text-xs font-medium uppercase tracking-widest text-muted-foreground">{p.variants[v].name}</span>
+        <span className="text-xs font-medium uppercase tracking-widest text-muted-foreground">{p.variants[v]?.name}</span>
       </div>
     </div>
   );
@@ -102,7 +102,7 @@ function ProductDialog({ state, onClose, onVariant }: { state: { p: Product; v: 
                 <DialogDescription className="mt-2 text-muted-foreground">{p.material}</DialogDescription>
               </div>
               <div>
-                <p className="mb-3 text-sm font-semibold text-cocoa">Colour — {p.variants[state.v].name}</p>
+                <p className="mb-3 text-sm font-semibold text-cocoa">Colour — {p.variants[state.v]?.name}</p>
                 <Swatches p={p} active={state.v} onPick={onVariant} size="lg" />
               </div>
               <div>

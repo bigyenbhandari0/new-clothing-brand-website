@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 export function Styling() {
   const [i, setI] = useState(0);
   const ref = useReveal<HTMLDivElement>();
-  const look = looks[i];
+  const look = looks[i] ?? looks[0];
   return (
     <section id="look" className="grain relative bg-cocoa px-5 py-24 text-ivory md:px-8 md:py-32" aria-labelledby="look-title">
       <div ref={ref} className="reveal mx-auto grid max-w-7xl items-center gap-10 md:grid-cols-[1.05fr_1fr] md:gap-16">
