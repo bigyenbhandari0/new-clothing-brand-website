@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { ArrowDown, ArrowUpRight, ArrowLeft, ArrowRight, Pause, Play } from "lucide-react";
 import hero from "@/assets/hero-model.jpg";
 import morning from "@/assets/look-morning.jpg";
+import { WinterWeather } from "./WinterWeather";
 import { AnimatedText } from "./BrandDetails";
 import { useWinter } from "./useWinter";
 
@@ -39,6 +40,8 @@ const slides = [
 export function Hero() {
   const { entered, reduced } = useWinter();
   const root = useRef<HTMLElement>(null);
+  const wind = useRef({ x: 0.5, y: 0.5, impulse: 0 });
+  const camera = useRef({ x: 0, y: 0, vx: 0, vy: 0 });
   const [paused, setPaused] = useState(false);
   const [visible, setVisible] = useState(true);
   const [hidden, setHidden] = useState(false);
@@ -58,6 +61,32 @@ export function Hero() {
     };
   }, []);
   const moving = entered && !reduced && !paused && visible && !hidden;
+  useEffect(() => {
+    const el = root.current;
+    if (!el || !moving) return;
+    let raf = 0,
+      last = 0,
+      time = 0;
+    const tick = (now: number) => {
+      const dt = Math.min(last ? (now - last) / 1000 : 0, 1 / 30);
+      last = now;
+      time += dt;
+      const c = camera.current;
+      const tx =
+        (wind.current.x - 0.5) * Math.min(28, el.clientWidth * 0.03) +
+        Math.sin(time * 0.35) * Math.min(13, el.clientWidth * 0.015);
+      const ty = (wind.current.y - 0.5) * 14 + Math.cos(time * 0.28) * 6;
+      c.vx += ((tx - c.x) * 32 - c.vx * 10) * dt;
+      c.vy += ((ty - c.y) * 32 - c.vy * 10) * dt;
+      c.x += c.vx * dt;
+      c.y += c.vy * dt;
+      el.style.setProperty("--camera-x", `${c.x}px`);
+      el.style.setProperty("--camera-y", `${c.y}px`);
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [moving]);
   const [active, setActive] = useState(0);
   const surface = useRef<HTMLDivElement>(null);
   const cursor = useRef<HTMLDivElement>(null);
@@ -98,21 +127,7 @@ export function Hero() {
             />
           </div>
         ))}
-        <div className="n-campaign-weather" aria-hidden="true">
-          {Array.from({ length: 18 }, (_, i) => (
-            <i
-              key={i}
-              style={
-                {
-                  "--snow-x": `${((i * 37) % 110) - 5}%`,
-                  "--snow-delay": `${-i * 0.73}s`,
-                  "--snow-time": `${5 + (i % 5) * 1.1}s`,
-                  "--snow-size": `${1 + (i % 3)}px`,
-                } as CSSProperties
-              }
-            />
-          ))}
-        </div>
+        <WinterWeather running={moving} wind={wind} />
         <div className="n-film-shade" />
       </div>
       <div
@@ -127,6 +142,13 @@ export function Hero() {
         onPointerMove={(e) => {
           if (e.pointerType !== "mouse") return;
           const rect = e.currentTarget.getBoundingClientRect();
+          const nextX = (e.clientX - rect.left) / rect.width;
+          wind.current.impulse = Math.max(
+            -180,
+            Math.min(180, wind.current.impulse + (nextX - wind.current.x) * 500),
+          );
+          wind.current.x = nextX;
+          wind.current.y = (e.clientY - rect.top) / rect.height;
           cursor.current?.style.setProperty("--cursor-x", `${e.clientX - rect.left}px`);
           cursor.current?.style.setProperty("--cursor-y", `${e.clientY - rect.top}px`);
           e.currentTarget.classList.add("is-hovering");
@@ -155,12 +177,18 @@ export function Hero() {
         onPointerLeave={(e) => e.currentTarget.classList.remove("is-hovering")}
         onTouchStart={(e) => {
           const t = e.touches[0];
+          if (t) {
+            const rect = e.currentTarget.getBoundingClientRect();
+            wind.current.x = (t.clientX - rect.left) / rect.width;
+            wind.current.y = (t.clientY - rect.top) / rect.height;
+          }
           if (t) start.current = { x: t.clientX, y: t.clientY };
         }}
         onTouchEnd={(e) => {
           const t = e.changedTouches[0],
             s = start.current;
           start.current = null;
+          if (t && s) wind.current.impulse = Math.max(-180, Math.min(180, (t.clientX - s.x) * 2));
           if (
             t &&
             s &&

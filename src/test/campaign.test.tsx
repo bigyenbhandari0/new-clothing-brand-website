@@ -14,6 +14,7 @@ beforeEach(() => {
     },
   );
 });
+vi.mock("@/components/winter/WinterWeather", () => ({ WinterWeather: () => null }));
 afterEach(() => {
   cleanup();
   vi.unstubAllGlobals();
