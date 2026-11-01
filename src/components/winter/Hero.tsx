@@ -32,7 +32,7 @@ export function Hero() {
       <div className="relative mx-auto flex max-w-7xl flex-col justify-end px-5 pb-16 pt-28 min-h-screen-stable md:justify-center md:px-8 md:pb-0" style={{ paddingBottom: "max(4rem, env(safe-area-inset-bottom))" }}>
         <div className="hero-copy max-w-xl text-ivory">
           <p className="text-xs font-semibold uppercase tracking-[0.35em] text-amber">Winter capsule</p>
-          <h1 id="hero-title" className="mt-4 text-5xl leading-[0.95] sm:text-6xl md:text-8xl">Cold days.<br /><em>Warm layers.</em></h1>
+          <h1 id="hero-title" tabIndex={-1} className="mt-4 text-5xl leading-[0.95] sm:text-6xl md:text-8xl">Cold days.<br /><em>Warm layers.</em></h1>
           <p className="mt-6 max-w-md text-base text-ivory/85 md:text-lg">Soft textures, quiet moments, and pieces to settle into.</p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <Button asChild variant="hearth" size="lg"><a href="#collection">Explore the collection</a></Button>

@@ -14,6 +14,24 @@ export function Intro() {
   const [state, setState] = useState<"idle" | "entering" | "leaving" | "done">("idle");
   const rootRef = useRef<HTMLDivElement>(null);
   const busy = useRef(false);
+  const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
+  useEffect(() => () => timers.current.forEach(clearTimeout), []);
+
+  useEffect(() => {
+    if (state === "done") return;
+    const root = rootRef.current;
+    root?.querySelector<HTMLButtonElement>("button")?.focus();
+    const trap = (event: KeyboardEvent) => {
+      if (event.key === "Escape") { event.preventDefault(); finish(); return; }
+      if (event.key !== "Tab" || !root) return;
+      const buttons = Array.from(root.querySelectorAll<HTMLButtonElement>("button:not(:disabled)"));
+      const first = buttons[0], last = buttons[buttons.length - 1];
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
+    };
+    root?.addEventListener("keydown", trap);
+    return () => root?.removeEventListener("keydown", trap);
+  }, [state]);
 
   useEffect(() => {
     if (entered) setState("done");
@@ -32,6 +50,7 @@ export function Intro() {
       if (e.pointerType !== "mouse") touchUntil = performance.now() + 2500;
     };
     const loop = (t: number) => {
+      if (document.hidden) { raf = requestAnimationFrame(loop); return; }
       if (auto && t > touchUntil) { tx = Math.sin(t / 3200) * 0.7; ty = Math.cos(t / 4100) * 0.4; }
       x += (tx - x) * 0.05; y += (ty - y) * 0.05;
       el.style.setProperty("--px", x.toFixed(3));
@@ -50,9 +69,11 @@ export function Intro() {
   }, [state]);
 
   const finish = () => {
-    sessionStorage.setItem("intro-seen", "1");
-    document.documentElement.classList.add("intro-seen");
+    try { sessionStorage.setItem("intro-seen", "1"); } catch { /* Storage is optional. */ }
+
     setEntered(true);
+    setState("done");
+    timers.current.push(setTimeout(() => document.getElementById("hero-title")?.focus({ preventScroll: true }), 50));
   };
 
   const enter = () => {
@@ -60,13 +81,13 @@ export function Intro() {
     busy.current = true;
     if (reduced) {
       setState("leaving");
-      setTimeout(finish, 450);
+      timers.current.push(setTimeout(finish, 250));
       return;
     }
     setState("entering");
     // let the hero begin appearing under the warm flood, then dissolve
-    setTimeout(() => { setEntered(true); setState("leaving"); }, 2200);
-    setTimeout(finish, 2900);
+    timers.current.push(setTimeout(() => setState("leaving"), 2200));
+    timers.current.push(setTimeout(finish, 2900));
   };
 
   const skip = () => { busy.current = true; finish(); };
@@ -84,7 +105,7 @@ export function Intro() {
       role="dialog"
       aria-modal="true"
       aria-label="Welcome"
-      className="intro-root fixed inset-0 z-[60] overflow-hidden bg-night text-night-foreground"
+      className="intro-root h-screen-stable fixed inset-0 z-[60] overflow-hidden bg-night text-night-foreground"
     >
       <div className="intro-stage absolute inset-0">
         <div className="absolute -inset-[4%]" style={layer(14)}>

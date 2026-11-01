@@ -23,9 +23,9 @@ export function Styling() {
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.35em] text-amber">Lookbook</p>
           <h2 id="look-title" className="mt-3 text-5xl md:text-7xl">Find your winter look</h2>
-          <div role="tablist" aria-label="Outfits" className="mt-10 flex flex-col gap-3">
+          <div role="group" aria-label="Outfits" className="mt-10 flex flex-col gap-3">
             {looks.map((l, k) => (
-              <button key={l.id} role="tab" aria-selected={k === i} onClick={() => setI(k)}
+              <button key={l.id} aria-pressed={k === i} onClick={() => setI(k)}
                 className={cn("flex min-h-14 items-center justify-between rounded-2xl border px-5 py-4 text-left transition-all duration-500",
                   k === i ? "border-amber bg-ivory text-cocoa shadow-[var(--shadow-glow)]" : "border-ivory/20 hover:border-ivory/50 hover:bg-ivory/5")}>
                 <span>

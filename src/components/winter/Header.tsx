@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Menu, Snowflake } from "lucide-react";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger, SheetClose } from "@/components/ui/sheet";
 import { Logo } from "./Logo";
-import { useWinter } from "./useWinter";
+import { useWinter, type Category } from "./useWinter";
 import { cn } from "@/lib/utils";
 
 const NAV = [
@@ -27,6 +27,8 @@ export function SnowToggle({ className }: { className?: string }) {
 }
 
 export function Header() {
+  const { setCategory } = useWinter();
+  const chooseCategory = (label: string) => { if (label !== "Lookbook") setCategory(label as Category); };
   const [scrolled, setScrolled] = useState(false);
   useEffect(() => {
     const on = () => setScrolled(window.scrollY > 40);
@@ -43,7 +45,7 @@ export function Header() {
         </a>
         <nav aria-label="Main" className="hidden items-center gap-8 lg:flex">
           {NAV.map((n) => (
-            <a key={n.label} href={n.href} className="text-sm font-medium text-cocoa/80 transition hover:text-cocoa">
+            <a key={n.label} href={n.href} onClick={() => chooseCategory(n.label)} className="text-sm font-medium text-cocoa/80 transition hover:text-cocoa">
               {n.label}
             </a>
           ))}
@@ -61,7 +63,7 @@ export function Header() {
               <nav aria-label="Mobile" className="mt-10 flex flex-col gap-2">
                 {NAV.map((n) => (
                   <SheetClose asChild key={n.label}>
-                    <a href={n.href} className="rounded-lg px-2 py-3 font-display text-3xl text-cocoa transition hover:bg-ivory/60">{n.label}</a>
+                    <a href={n.href} onClick={() => chooseCategory(n.label)} className="rounded-lg px-2 py-3 font-display text-3xl text-cocoa transition hover:bg-ivory/60">{n.label}</a>
                   </SheetClose>
                 ))}
               </nav>

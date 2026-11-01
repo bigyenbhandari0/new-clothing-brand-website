@@ -1,17 +1,16 @@
 import { useRef, useState } from "react";
 import { products, type Product } from "@/lib/catalog";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
-import { useReveal } from "./useWinter";
+import { useReveal, useWinter, type Category } from "./useWinter";
 import { cn } from "@/lib/utils";
 
 function Swatches({ p, active, onPick, size = "sm" }: { p: Product; active: number; onPick: (i: number) => void; size?: "sm" | "lg" }) {
   return (
-    <div role="radiogroup" aria-label={`${p.name} colour`} className="flex items-center gap-2">
+    <div role="group" aria-label={`${p.name} colour`} className="flex items-center gap-2">
       {p.variants.map((v, i) => (
         <button
           key={v.name}
-          role="radio"
-          aria-checked={active === i}
+          aria-pressed={active === i}
           aria-label={v.name}
           onClick={(e) => { e.stopPropagation(); onPick(i); }}
           className={cn("rounded-full border-2 transition-transform hover:scale-110", size === "lg" ? "h-10 w-10" : "h-7 w-7", active === i ? "border-cocoa" : "border-transparent")}
@@ -26,8 +25,9 @@ function Swatches({ p, active, onPick, size = "sm" }: { p: Product; active: numb
 function Card({ p, onOpen }: { p: Product; onOpen: (p: Product, v: number) => void }) {
   const [v, setV] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
+  const { reduced } = useWinter();
   const onMove = (e: React.PointerEvent) => {
-    if (e.pointerType !== "mouse" || !ref.current) return;
+    if (reduced || e.pointerType !== "mouse" || !ref.current) return;
     const r = ref.current.getBoundingClientRect();
     const x = (e.clientX - r.left) / r.width - 0.5;
     const y = (e.clientY - r.top) / r.height - 0.5;
@@ -62,6 +62,14 @@ function Card({ p, onOpen }: { p: Product; onOpen: (p: Product, v: number) => vo
 
 export function Collection() {
   const ref = useReveal<HTMLDivElement>();
+  const { category, setCategory } = useWinter();
+  const categories: Category[] = ["All pieces", "Knitwear", "Outerwear", "Accessories"];
+  const shown = products.filter(p => category === "All pieces" ||
+    (category === "Knitwear" && ["knit", "trousers"].includes(p.id)) ||
+    (category === "Outerwear" && ["puffer", "coat"].includes(p.id)) ||
+    (category === "Accessories" && ["scarf", "beanie"].includes(p.id)));
+
+  const returnFocus = useRef<HTMLElement | null>(null);
   const [open, setOpen] = useState<{ p: Product; v: number } | null>(null);
   return (
     <section id="collection" className="relative px-5 py-24 md:px-8 md:py-32" aria-labelledby="col-title">
@@ -73,20 +81,24 @@ export function Collection() {
           </div>
           <p className="max-w-sm text-muted-foreground">Built to layer, built to linger. Tap any piece for a closer look.</p>
         </div>
-        <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
-          {products.map((p) => <Card key={p.id} p={p} onOpen={(p, v) => setOpen({ p, v })} />)}
+        <div className="mt-8 flex flex-wrap gap-2" role="group" aria-label="Filter collection">
+          {categories.map(c => <button key={c} onClick={() => setCategory(c)} aria-pressed={category === c} className={cn("min-h-11 rounded-full border px-5 text-sm transition", category === c ? "border-cocoa bg-cocoa text-ivory" : "border-cocoa/20 text-cocoa hover:bg-oatmeal")}>{c}</button>)}
+        </div>
+        <p className="sr-only" role="status">{shown.length} pieces in {category.toLowerCase()}</p>
+        <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
+          {shown.map((p) => <Card key={p.id} p={p} onOpen={(p, v) => { returnFocus.current = document.activeElement as HTMLElement; setOpen({ p, v }); }} />)}
         </div>
       </div>
-      <ProductDialog state={open} onClose={() => setOpen(null)} onVariant={(v) => setOpen((o) => (o ? { ...o, v } : o))} />
+      <ProductDialog restoreFocus={() => returnFocus.current?.focus()} state={open} onClose={() => setOpen(null)} onVariant={(v) => setOpen((o) => (o ? { ...o, v } : o))} />
     </section>
   );
 }
 
-function ProductDialog({ state, onClose, onVariant }: { state: { p: Product; v: number } | null; onClose: () => void; onVariant: (v: number) => void }) {
+function ProductDialog({ state, onClose, onVariant, restoreFocus }: { restoreFocus: () => void; state: { p: Product; v: number } | null; onClose: () => void; onVariant: (v: number) => void }) {
   const p = state?.p;
   return (
     <Dialog open={!!state} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="max-h-[92svh] w-[94vw] max-w-4xl overflow-y-auto border-none bg-ivory p-0 sm:rounded-2xl">
+      <DialogContent onCloseAutoFocus={(event) => { event.preventDefault(); restoreFocus(); }} className="max-h-[92svh] w-[94vw] max-w-4xl overflow-y-auto border-none bg-ivory p-0 sm:rounded-2xl">
         {p && state && (
           <div className="grid md:grid-cols-2">
             <div className="relative aspect-[4/5] bg-muted md:rounded-l-2xl md:overflow-hidden">

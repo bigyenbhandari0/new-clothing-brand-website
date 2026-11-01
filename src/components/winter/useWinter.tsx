@@ -1,6 +1,10 @@
 import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 
+export type Category = "All pieces" | "Knitwear" | "Outerwear" | "Accessories";
+
 type Ctx = {
+  category: Category;
+  setCategory: (v: Category) => void;
   snow: boolean;
   setSnow: (v: boolean) => void;
   reduced: boolean;
@@ -12,6 +16,7 @@ type Ctx = {
 const WinterCtx = createContext<Ctx | null>(null);
 
 export function WinterProvider({ children }: { children: ReactNode }) {
+  const [category, setCategory] = useState<Category>("All pieces");
   const [snow, setSnowState] = useState(true);
   const [reduced, setReduced] = useState(false);
   const [entered, setEntered] = useState(false);
@@ -25,24 +30,26 @@ export function WinterProvider({ children }: { children: ReactNode }) {
     };
     upd();
     mq.addEventListener("change", upd);
-    if (localStorage.getItem("snow") === "off") setSnowState(false);
-    if (sessionStorage.getItem("intro-seen")) setEntered(true);
+    try {
+      if (localStorage.getItem("snow") === "off") setSnowState(false);
+      if (sessionStorage.getItem("intro-seen")) setEntered(true);
+    } catch { /* Keep the experience usable when browser storage is blocked. */ }
     return () => mq.removeEventListener("change", upd);
   }, []);
 
   const setSnow = (v: boolean) => {
     setSnowState(v);
-    localStorage.setItem("snow", v ? "on" : "off");
+    try { localStorage.setItem("snow", v ? "on" : "off"); } catch { /* Optional preference. */ }
   };
   const replay = () => {
-    sessionStorage.removeItem("intro-seen");
+    try { sessionStorage.removeItem("intro-seen"); } catch { /* Optional session. */ }
     document.documentElement.classList.remove("intro-seen");
     setEntered(false);
     setIntroKey((k) => k + 1);
     window.scrollTo({ top: 0 });
   };
 
-  return <WinterCtx.Provider value={{ snow, setSnow, reduced, entered, setEntered, replay, introKey }}>{children}</WinterCtx.Provider>;
+  return <WinterCtx.Provider value={{ category, setCategory, snow, setSnow, reduced, entered, setEntered, replay, introKey }}>{children}</WinterCtx.Provider>;
 }
 
 export function useWinter() {

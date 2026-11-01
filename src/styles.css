@@ -203,3 +203,32 @@
 @keyframes flake { from { opacity: 1; transform: translate(0,0) } to { opacity: 0; transform: translate(var(--dx), var(--dy)) } }
 
 .outfit-img { transition: opacity .9s var(--ease-out), transform 1.2s var(--ease-out); }
+
+/* Finished winter interactions */
+section[id] { scroll-margin-top: 6rem; }
+.intro-root { isolation: isolate; }
+.intro-root[data-state="leaving"] .intro-stage { transform: scale(5.5); filter: blur(1px); }
+.intro-root[data-state="leaving"] .intro-flood { opacity: 1; transition: none; }
+.intro-root[data-state="leaving"] .intro-ui { opacity: 0; }
+.globe-stage { cursor: grab; touch-action: pan-y; }
+.globe-stage:active { cursor: grabbing; }
+.globe-stage canvas { width: 100%; height: 100%; display: block; }
+.globe-control { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; border: 1px solid #f5ead044; border-radius: 99px; font-size: 12px; background: #fff5; background: #ffffff08; transition: background .25s, transform .25s; }
+.globe-control:hover { background: #ffffff18; transform: translateY(-2px); }
+.globe-control:disabled { opacity: .45; cursor: default; transform: none; }
+.auren-signature { display: block; padding-left: .13em; }
+.auren-word { isolation: isolate; }
+.auren-light { position: absolute; inset: -5%; pointer-events: none; background: linear-gradient(110deg, transparent 25%, #ffdca34d 48%, transparent 68%); mask-image: linear-gradient(transparent, black 35%, black 65%, transparent); opacity: 0; transform: translateX(-100%); }
+.auren.is-in .auren-light { animation: signature-light 2.4s ease 1s both; }
+@keyframes signature-light { 0% { opacity: 0; transform: translateX(-80%); } 30%,65% { opacity: 1; } 100% { opacity: 0; transform: translateX(80%); } }
+.skip-content { position: fixed; z-index: 80; left: 1rem; top: 1rem; padding: 1rem; background: var(--ivory); color: var(--cocoa); border-radius: .5rem; transform: translateY(-200%); }
+.skip-content:focus { transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; }
+  .auren-letter { opacity: 1; transform: none; }
+  .auren-light { display: none; }
+  .logo-float, .twinkle { animation: none; }
+  .hero-in .hero-img, .hero-in .hero-copy > * { animation: none; }
+  .intro-root[data-state="leaving"] .intro-stage { transform: none; filter: none; }
+  .intro-root[data-state="leaving"] .intro-flood { opacity: 0; }
+}
