@@ -3479,3 +3479,115 @@ section[id] {
 .reduced .n-campaign.n-arrived .n-campaign-slide.is-active img {
   transform: none;
 }
+
+/* A dark snowstorm keeps the bronze signature and its warm light in focus. */
+.n-intro {
+  background: #030505;
+}
+.n-studio-vignette {
+  background: radial-gradient(ellipse at 50% 38%, transparent 20%, #0003 80%);
+}
+.n-intro-center {
+  filter: none;
+}
+.n-intro[data-state="entering"] .n-studio-lights {
+  filter: none;
+}
+.n-campaign-cursor {
+  backdrop-filter: none;
+}
+@media (max-width: 700px) {
+  .n-header-glass.n-header-scrolled {
+    backdrop-filter: none;
+    background: #18201bf2;
+  }
+}
+
+/* GPU-friendly campaign motion: no per-frame React or canvas work. */
+.n-campaign.n-arrived .n-campaign-slide.is-active img {
+  animation: n-campaign-breathe 18s ease-in-out infinite alternate;
+  will-change: transform;
+}
+@keyframes n-campaign-breathe {
+  from {
+    transform: scale(1.015);
+  }
+  to {
+    transform: scale(1.045);
+  }
+}
+.n-campaign-weather {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+}
+.n-campaign-weather i {
+  position: absolute;
+  left: var(--snow-x);
+  top: -10%;
+  width: var(--snow-size);
+  height: var(--snow-size);
+  border-radius: 50%;
+  background: #eef5f5;
+  opacity: 0.35;
+  animation: n-campaign-snow var(--snow-time) var(--snow-delay) linear infinite;
+}
+@keyframes n-campaign-snow {
+  from {
+    transform: translate3d(-8vw, -10vh, 0);
+  }
+  to {
+    transform: translate3d(24vw, 115vh, 0);
+  }
+}
+.n-campaign[data-motion="paused"] .n-campaign-slide.is-active img,
+.n-campaign[data-motion="paused"] .n-campaign-weather i {
+  animation-play-state: paused;
+}
+.n-scene-toggle {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  min-height: 44px;
+  padding: 5px 0;
+  border: 0;
+  background: none;
+  color: #f5f1e7;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+}
+.n-scene-toggle:hover {
+  color: #e5cda0;
+}
+.n-scene-toggle:focus-visible {
+  outline: 2px solid #e5cda0;
+  outline-offset: 3px;
+}
+@media (max-width: 700px) {
+  .n-campaign-weather i:nth-child(n + 10) {
+    display: none;
+  }
+  .n-scene-toggle {
+    align-self: flex-end;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .n-campaign.n-arrived .n-campaign-slide.is-active img {
+    animation: none;
+    transform: none;
+    will-change: auto;
+  }
+  .n-campaign-weather {
+    display: none;
+  }
+}
+.reduced .n-campaign.n-arrived .n-campaign-slide.is-active img {
+  animation: none;
+  transform: none;
+  will-change: auto;
+}
+.reduced .n-campaign-weather {
+  display: none;
+}

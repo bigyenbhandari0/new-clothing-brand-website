@@ -1,5 +1,5 @@
-import { useRef, useState, type CSSProperties } from "react";
-import { ArrowDown, ArrowUpRight, ArrowLeft, ArrowRight } from "lucide-react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { ArrowDown, ArrowUpRight, ArrowLeft, ArrowRight, Pause, Play } from "lucide-react";
 import hero from "@/assets/hero-model.jpg";
 import morning from "@/assets/look-morning.jpg";
 import { AnimatedText } from "./BrandDetails";
@@ -37,7 +37,27 @@ const slides = [
 ];
 
 export function Hero() {
-  const { entered } = useWinter();
+  const { entered, reduced } = useWinter();
+  const root = useRef<HTMLElement>(null);
+  const [paused, setPaused] = useState(false);
+  const [visible, setVisible] = useState(true);
+  const [hidden, setHidden] = useState(false);
+  useEffect(() => {
+    const el = root.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(([entry]) => setVisible(!!entry?.isIntersecting), {
+      threshold: 0.05,
+    });
+    observer.observe(el);
+    const onVisibility = () => setHidden(document.hidden);
+    onVisibility();
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => {
+      observer.disconnect();
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
+  }, []);
+  const moving = entered && !reduced && !paused && visible && !hidden;
   const [active, setActive] = useState(0);
   const surface = useRef<HTMLDivElement>(null);
   const cursor = useRef<HTMLDivElement>(null);
@@ -47,7 +67,9 @@ export function Hero() {
     setActive((i) => (i + direction + slides.length) % slides.length);
   return (
     <section
+      ref={root}
       id="top"
+      data-motion={moving ? "running" : "paused"}
       className={`n-hero n-film-hero n-campaign ${entered ? "n-arrived" : ""}`}
       aria-labelledby="hero-title"
       aria-roledescription="carousel"
@@ -76,6 +98,21 @@ export function Hero() {
             />
           </div>
         ))}
+        <div className="n-campaign-weather" aria-hidden="true">
+          {Array.from({ length: 18 }, (_, i) => (
+            <i
+              key={i}
+              style={
+                {
+                  "--snow-x": `${((i * 37) % 110) - 5}%`,
+                  "--snow-delay": `${-i * 0.73}s`,
+                  "--snow-time": `${5 + (i % 5) * 1.1}s`,
+                  "--snow-size": `${1 + (i % 3)}px`,
+                } as CSSProperties
+              }
+            />
+          ))}
+        </div>
         <div className="n-film-shade" />
       </div>
       <div
@@ -169,6 +206,17 @@ export function Hero() {
           <span>DISCOVER THE WINTER EDIT</span>
         </a>
         <div className="n-campaign-controls">
+          {!reduced && (
+            <button
+              className="n-scene-toggle"
+              onClick={() => setPaused((v) => !v)}
+              aria-label={paused ? "Resume scene animation" : "Pause scene animation"}
+              aria-pressed={paused}
+            >
+              {paused ? <Play size={13} /> : <Pause size={13} />}
+              <span>{paused ? "Resume atmosphere" : "Winter, in motion"}</span>
+            </button>
+          )}
           <span className="n-campaign-caption" aria-live="polite" aria-atomic="true">
             0{active + 1} / 0{slides.length} — {slides[active]!.label}
           </span>

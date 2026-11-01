@@ -1,11 +1,23 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
-import { afterEach, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { Hero } from "@/components/winter/Hero";
 vi.mock("@/components/winter/useWinter", () => ({ useWinter: () => ({ entered: true }) }));
 vi.mock("@/components/winter/BrandDetails", () => ({
   AnimatedText: ({ text }: { text: string }) => text,
 }));
-afterEach(cleanup);
+beforeEach(() => {
+  vi.stubGlobal(
+    "IntersectionObserver",
+    class {
+      observe() {}
+      disconnect() {}
+    },
+  );
+});
+afterEach(() => {
+  cleanup();
+  vi.unstubAllGlobals();
+});
 it("changes campaign with arrows and dots, wraps, and removes film controls", () => {
   const { container } = render(<Hero />);
   expect(container.querySelector("video")).toBeNull();
@@ -62,4 +74,13 @@ it("supports keyboard browsing across the four campaign scenes", () => {
     "aria-pressed",
     "true",
   );
+});
+
+it("lets visitors pause and resume the scene animation", () => {
+  const { container } = render(<Hero />);
+  expect(container.querySelector("section")).toHaveAttribute("data-motion", "running");
+  fireEvent.click(screen.getByRole("button", { name: "Pause scene animation" }));
+  expect(container.querySelector("section")).toHaveAttribute("data-motion", "paused");
+  fireEvent.click(screen.getByRole("button", { name: "Resume scene animation" }));
+  expect(container.querySelector("section")).toHaveAttribute("data-motion", "running");
 });

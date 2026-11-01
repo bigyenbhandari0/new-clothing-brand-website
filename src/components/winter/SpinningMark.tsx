@@ -52,7 +52,7 @@ export function SpinningMark({ reduced }: { reduced: boolean }) {
             antialias: true,
             powerPreference: "low-power",
           });
-          renderer.setPixelRatio(Math.min(devicePixelRatio, 1.75));
+          renderer.setPixelRatio(Math.min(devicePixelRatio, 1.25));
           renderer.setSize(el.clientWidth, el.clientHeight);
           renderer.setClearColor(0, 0);
           renderer.toneMapping = T.ACESFilmicToneMapping;
@@ -126,7 +126,7 @@ export function SpinningMark({ reduced }: { reduced: boolean }) {
           const nGeo = new T.ExtrudeGeometry(n, {
             depth: 0.24,
             bevelEnabled: true,
-            bevelSegments: 4,
+            bevelSegments: 2,
             bevelSize: 0.035,
             bevelThickness: 0.035,
             steps: 1,
@@ -141,10 +141,10 @@ export function SpinningMark({ reduced }: { reduced: boolean }) {
           const ringGeo = new T.ExtrudeGeometry(ring, {
             depth: 0.18,
             bevelEnabled: true,
-            bevelSegments: 4,
+            bevelSegments: 2,
             bevelSize: 0.025,
             bevelThickness: 0.025,
-            curveSegments: 96,
+            curveSegments: 48,
             steps: 1,
           });
           ringGeo.translate(0, 0, -0.09);
@@ -161,6 +161,7 @@ export function SpinningMark({ reduced }: { reduced: boolean }) {
             angle = -0.5,
             px = 0,
             py = 0;
+          let readyFrame = false;
           const tick = (t: number) => {
             const dt = Math.min((t - last) / 1000, 0.04);
             last = t;
@@ -170,7 +171,10 @@ export function SpinningMark({ reduced }: { reduced: boolean }) {
             group.rotation.y = motion.current ? -0.5 : angle + px * 0.13;
             group.rotation.x = motion.current ? 0.08 : 0.1 + py * 0.12;
             group.position.y = motion.current ? 0 : Math.sin(t / 2100) * 0.045;
-            renderer.render(scene, camera);
+            if (!motion.current || !readyFrame) {
+              renderer.render(scene, camera);
+              readyFrame = true;
+            }
             if (!document.hidden) raf = requestAnimationFrame(tick);
           };
           const restart = () => {
