@@ -1,3 +1,4 @@
+import { AnimatedText, WinterBloom } from "./BrandDetails";
 import { useEffect, useRef, useState } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { looks } from "@/lib/catalog";
@@ -59,6 +60,7 @@ export function Styling() {
   };
   return (
     <section id="look" className="n-look n-section" aria-labelledby="look-title">
+      <WinterBloom className="n-look-bloom" />
       <div ref={ref} className="n-look-grid n-reveal">
         <div className="n-look-visual">
           {looks.map((l, i) => (
@@ -82,9 +84,11 @@ export function Styling() {
         <div className="n-look-copy">
           <p className="n-eyebrow">02 — WAYS TO WEAR WINTER</p>
           <h2 id="look-title">
-            One season.
+            <AnimatedText text="One season." />
             <br />
-            <em>Many moods.</em>
+            <em>
+              <AnimatedText text="Many moods." offset={120} />
+            </em>
           </h2>
           <p className="n-look-description">
             From the first light to the last embers.

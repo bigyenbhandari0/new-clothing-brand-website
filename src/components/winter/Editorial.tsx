@@ -1,16 +1,20 @@
+import { AnimatedText, WinterBloom } from "./BrandDetails";
 import knit from "@/assets/ed-knit.jpg";
 import { useReveal } from "./useWinter";
 export function Editorial() {
   const ref = useReveal<HTMLDivElement>();
   return (
     <section id="journal" className="n-editorial n-section">
+      <WinterBloom className="n-editorial-bloom" />
       <div ref={ref} className="n-editorial-grid n-reveal">
         <div className="n-editorial-copy">
           <p className="n-eyebrow">THE NIVELLE POINT OF VIEW</p>
           <h2>
-            Less noise.
+            <AnimatedText text="Less noise." />
             <br />
-            <em>More feeling.</em>
+            <em>
+              <AnimatedText text="More feeling." offset={120} />
+            </em>
           </h2>
           <p>
             The weight of a good knit. The comfort of a familiar coat. The beauty of getting dressed
@@ -23,6 +27,9 @@ export function Editorial() {
           <span className="n-editorial-signature">Nivelle</span>
         </div>
         <figure>
+          <span className="n-journal-tag">
+            THE TEXTURE JOURNAL <span>01</span>
+          </span>
           <img
             src={knit}
             alt="A close study of oatmeal cable-knit texture beside warm cocoa"

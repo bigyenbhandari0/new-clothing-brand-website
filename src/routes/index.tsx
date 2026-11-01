@@ -7,6 +7,7 @@ import { Collection } from "@/components/winter/Collection";
 import { Styling } from "@/components/winter/Styling";
 import { Editorial } from "@/components/winter/Editorial";
 import { Footer } from "@/components/winter/Footer";
+import { SeasonalRibbon } from "@/components/winter/BrandDetails";
 import { FabricStudio } from "@/components/winter/FabricStudio";
 
 export const Route = createFileRoute("/")({
@@ -47,6 +48,7 @@ function WinterExperience() {
         <Header />
         <main id="main">
           <Hero />
+          <SeasonalRibbon />
           <Collection />
           <Styling />
           <FabricStudio />

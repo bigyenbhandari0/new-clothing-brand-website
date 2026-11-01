@@ -4,6 +4,7 @@ import { WinterProvider, useWinter } from "@/components/winter/useWinter";
 import { Intro } from "@/components/winter/Intro";
 import { Collection } from "@/components/winter/Collection";
 import { Footer } from "@/components/winter/Footer";
+import { Header } from "@/components/winter/Header";
 import { Styling } from "@/components/winter/Styling";
 
 vi.mock("@/components/winter/SnowCanvas", () => ({ SnowCanvas: () => null }));
@@ -121,5 +122,23 @@ describe("Winter experience", () => {
     act(() => vi.advanceTimersByTime(8000));
     expect(screen.queryByText("Preparing your look…")).not.toBeInTheDocument();
     expect(screen.getByAltText("Nivelle Cabin morning winter outfit")).toHaveClass("is-active");
+  });
+  it("navigates from the collection menu to a filtered collection and restores focus on Escape", () => {
+    render(
+      <WinterProvider>
+        <Header />
+        <Collection />
+      </WinterProvider>,
+    );
+    const trigger = screen.getByRole("button", { name: "The collection" });
+    fireEvent.click(trigger);
+    const menu = document.getElementById("collection-menu")!;
+    fireEvent.click(within(menu).getByRole("link", { name: /03 Outerwear/ }));
+    expect(screen.getByRole("status")).toHaveTextContent("2 pieces in outerwear");
+    expect(document.getElementById("collection-menu")).not.toBeInTheDocument();
+    fireEvent.click(trigger);
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(trigger).toHaveAttribute("aria-expanded", "false");
+    expect(trigger).toHaveFocus();
   });
 });

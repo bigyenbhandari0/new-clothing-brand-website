@@ -1,3 +1,4 @@
+import { AnimatedText } from "./BrandDetails";
 import { useRef, useState } from "react";
 import { ArrowUpRight, Plus } from "lucide-react";
 import { products, type Product } from "@/lib/catalog";
@@ -53,6 +54,7 @@ function Card({ p, onOpen }: { p: Product; onOpen: (p: Product, v: number) => vo
         <span className="n-product-open">
           <Plus size={20} />
         </span>
+        <span className="n-product-hover-label">Discover the piece</span>
         <span className="n-product-index">N / {p.id.toUpperCase()}</span>
       </button>
       <div className="n-product-info">
@@ -89,7 +91,10 @@ export function Collection() {
           <div>
             <p className="n-eyebrow">01 — THE CONSIDERED WARDROBE</p>
             <h2 id="collection-title">
-              Winter, <em>well dressed.</em>
+              <AnimatedText text="Winter," />{" "}
+              <em>
+                <AnimatedText text="well dressed." offset={120} />
+              </em>
             </h2>
           </div>
           <p>

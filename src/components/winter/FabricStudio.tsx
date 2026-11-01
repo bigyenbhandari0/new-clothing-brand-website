@@ -1,3 +1,4 @@
+import { AnimatedText } from "./BrandDetails";
 import { useEffect, useRef, useState } from "react";
 import { RotateCcw, MoveHorizontal } from "lucide-react";
 import knit from "@/assets/ed-knit.jpg";
@@ -249,9 +250,12 @@ export function FabricStudio() {
         <div className="n-material-copy">
           <p className="n-eyebrow">03 — THE KNIT STUDY</p>
           <h2 id="material-title">
-            A closer look
+            <AnimatedText text="A closer look" />
             <br />
-            at <em>softness.</em>
+            at{" "}
+            <em>
+              <AnimatedText text="softness." offset={120} />
+            </em>
           </h2>
           <p>
             Light, texture, and the way a fabric falls.
