@@ -77,14 +77,14 @@ export function WinterWeather({
       scale = Math.min(1, 1280 / w, 850 / h);
       canvas.width = Math.round(w * scale);
       canvas.height = Math.round(h * scale);
-      // The photographic environment supplies the light. No synthetic oval halo.
-      flakes = Array.from({ length: w < 700 ? 80 : studio ? 220 : 145 }, () => {
+      // Depth controls speed and defocus; the lamps are rendered in a separate cached layer.
+      flakes = Array.from({ length: w < 700 ? (studio ? 140 : 80) : studio ? 310 : 145 }, () => {
         const z = Math.random();
         return {
           x: Math.random() * w,
           y: Math.random() * h,
           z,
-          vx: 40 + z * 80,
+          vx: studio ? 140 + z * 300 : 40 + z * 80,
           vy: 18 + z * 50,
           phase: Math.random() * Math.PI * 2,
           crystal: z > 0.72 && Math.random() > 0.65,
@@ -101,19 +101,21 @@ export function WinterWeather({
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.setTransform(scale, 0, 0, scale, 0, 0);
-      const gust = 75 + Math.sin(time * 0.43) * 55 + Math.sin(time * 1.17) * 24;
+      const gust = studio
+        ? 230 + Math.sin(time * 0.7) * 110 + Math.sin(time * 1.8) * 65
+        : 75 + Math.sin(time * 0.43) * 55 + Math.sin(time * 1.17) * 24;
       const input = wind?.current;
       if (input && (moving || fade > 0)) input.impulse *= Math.exp(-dt * 2.8);
       for (const p of flakes) {
         if (moving || fade > 0) {
-          const response = 1.2 + p.z * 2.5;
+          const response = (studio ? 2.2 : 1.2) + p.z * 2.5;
           const eddy =
             Math.sin(p.y * 0.009 + time * 0.9 + p.phase) * 26 +
             Math.cos(p.x * 0.005 - time * 0.6) * 18;
           const wake = input
             ? input.impulse * Math.exp(-(((p.y - input.y * h) / (h * 0.3)) ** 2))
             : 0;
-          const tx = (gust + eddy + wake) * (0.35 + p.z * 1.4);
+          const tx = (gust + eddy * (studio ? 2.4 : 1) + wake) * (0.35 + p.z * 1.4);
           p.vx += (tx - p.vx) * (1 - Math.exp(-response * dt));
           // Gravity balanced by air drag; eddies change each flake's path independently.
           p.vy +=
@@ -138,10 +140,21 @@ export function WinterWeather({
           const size = r * 2.1;
           ctx.save();
           ctx.translate(p.x, p.y);
-          ctx.rotate(p.phase + time * (0.18 + p.z * 0.4));
+          ctx.rotate(p.phase + time * (studio ? 0.5 + p.z : 0.18 + p.z * 0.4));
           ctx.drawImage(crystal, -size, -size, size * 2, size * 2);
           ctx.restore();
-        } else ctx.drawImage(sprite, p.x - r, p.y - r, r * 2, r * 2);
+        } else {
+          if (studio && p.z > 0.65 && (moving || fade > 0)) {
+            const opacity = ctx.globalAlpha;
+            for (let exposure = 2; exposure > 0; exposure--) {
+              ctx.globalAlpha = opacity * (0.12 / exposure);
+              const trail = exposure * 0.004;
+              ctx.drawImage(sprite, p.x - p.vx * trail - r, p.y - p.vy * trail - r, r * 2, r * 2);
+            }
+            ctx.globalAlpha = opacity;
+          }
+          ctx.drawImage(sprite, p.x - r, p.y - r, r * 2, r * 2);
+        }
       }
       ctx.globalAlpha = 1;
       if ((moving || fade > 0) && !document.hidden) raf = requestAnimationFrame(draw);

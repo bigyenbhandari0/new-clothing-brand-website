@@ -1,4 +1,10 @@
+import { AtelierLamps } from "./AtelierLamps";
 import { WinterWeather } from "./WinterWeather";
 export function StudioLights({ reduced }: { reduced: boolean }) {
-  return <WinterWeather studio running={!reduced} />;
+  return (
+    <>
+      <AtelierLamps />
+      <WinterWeather studio running={!reduced} />
+    </>
+  );
 }

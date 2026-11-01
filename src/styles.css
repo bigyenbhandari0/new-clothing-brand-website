@@ -3669,3 +3669,22 @@ section[id] {
   width: 100%;
   height: 100%;
 }
+/* Preserve the dark winter atelier: lamps illuminate the signature, not the whole sky. */
+.n-intro-environment img {
+  filter: brightness(0.48) saturate(0.72);
+}
+.n-intro-environment-shade {
+  background:
+    linear-gradient(90deg, #01050433, #01050466 42%, #01050466 58%, #01050433),
+    linear-gradient(0deg, #01050477, transparent 55%);
+}
+.n-atelier-lamps {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.n-intro .n-studio-lights {
+  pointer-events: none;
+}
