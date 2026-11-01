@@ -7,7 +7,7 @@ import { Footer } from "@/components/winter/Footer";
 import { Header } from "@/components/winter/Header";
 import { Styling } from "@/components/winter/Styling";
 
-vi.mock("@/components/winter/SnowCanvas", () => ({ SnowCanvas: () => null }));
+vi.mock("@/components/winter/StudioLights", () => ({ StudioLights: () => null }));
 vi.mock("@/components/winter/SpinningMark", () => ({
   SpinningMark: () => <span>Rotating Nivelle monogram</span>,
 }));
@@ -59,7 +59,7 @@ describe("Winter experience", () => {
     act(() => vi.advanceTimersByTime(850));
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     expect(screen.getByTestId("store")).not.toHaveAttribute("inert");
-    expect(sessionStorage.getItem("nivelle-intro-v2-seen")).toBe("1");
+    expect(sessionStorage.getItem("nivelle-intro-studio-seen")).toBe("1");
     fireEvent.click(screen.getByRole("button", { name: "Replay entrance" }));
     expect(screen.getByRole("dialog")).toHaveAttribute("data-state", "idle");
     fireEvent.keyDown(screen.getByRole("dialog"), { key: "Escape" });
