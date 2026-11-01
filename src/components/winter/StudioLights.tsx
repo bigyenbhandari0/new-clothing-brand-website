@@ -24,11 +24,11 @@ export function StudioLights({ reduced }: { reduced: boolean }) {
       canvas.width = Math.round(w * dpr);
       canvas.height = Math.round(h * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      dust = Array.from({ length: w < 700 ? 75 : 145 }, () => ({
+      dust = Array.from({ length: w < 700 ? 100 : 200 }, () => ({
         x: Math.random() * w,
         y: Math.random() * h,
         r: 0.25 + Math.random() * 1.25,
-        speed: 5 + Math.random() * 12,
+        speed: 9 + Math.random() * 16,
         phase: Math.random() * Math.PI * 2,
       }));
     };
@@ -95,8 +95,18 @@ export function StudioLights({ reduced }: { reduced: boolean }) {
       ambient.addColorStop(1, "#00000000");
       ctx.fillStyle = ambient;
       ctx.fillRect(0, 0, w, h);
-      beam(middle - separation, lampY, aim - 24, 0.98 + Math.sin(clock * 0.35) * 0.02);
-      beam(middle + separation, lampY, aim + 24, 0.96 + Math.cos(clock * 0.3) * 0.02);
+      beam(
+        middle - separation,
+        lampY,
+        aim - 24 + Math.sin(clock * 0.32) * 45,
+        1.18 + Math.sin(clock * 0.6) * 0.14,
+      );
+      beam(
+        middle + separation,
+        lampY,
+        aim + 24 + Math.cos(clock * 0.28) * 40,
+        1.12 + Math.cos(clock * 0.5) * 0.12,
+      );
       // Dark brushed-metal uprights and crossbar, kept behind the floating signature.
       const mast = middle + Math.min(95, w * 0.18);
       const pole = ctx.createLinearGradient(mast - 5, 0, mast + 5, 0);
@@ -110,6 +120,16 @@ export function StudioLights({ reduced }: { reduced: boolean }) {
       ctx.fillRect(middle - separation - 5, lampY - 8, mast - middle + separation + 12, 4);
       lamp(middle - separation, lampY, -0.08);
       lamp(middle + separation, lampY, 0.08);
+      // Broad, slow mist layers catch the moving studio light.
+      for (let i = 0; i < 3; i++) {
+        const cx = middle + Math.sin(clock * 0.14 + i * 2) * w * 0.22;
+        const cy = h * (0.36 + i * 0.16) + Math.cos(clock * 0.18 + i) * 24;
+        const mist = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.min(w * 0.44, 480));
+        mist.addColorStop(0, `rgba(188,179,147,${0.045 + Math.sin(clock * 0.3 + i) * 0.012})`);
+        mist.addColorStop(1, "rgba(188,179,147,0)");
+        ctx.fillStyle = mist;
+        ctx.fillRect(0, 0, w, h);
+      }
       const floor = ctx.createRadialGradient(
         middle,
         h * 0.82,
